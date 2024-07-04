@@ -1,0 +1,39 @@
+.top-form {
+    -fx-background-color: #fff;
+    -fx-border-color: #000;
+    -fx-border-width: .2px .2px .4px .2px;
+}
+.nav-form {
+    -fx-background-color: linear-gradient(to top right,  #528560, #70f026);
+
+}
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-text-fill: #fff;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+}
+.nav-btn:hover {
+    -fx-background-color: linear-gradient(to top right, #528560, #70f026);
+}
+
+.table-view {
+    -fx-text-fill: #0000;
+    -fx-background-color: #fff;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #528560;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to top right, #528560, #70f026);
+    -fx-background-insets: 0 0 0 0;
+    -fx-background-radius: 10px 0px 0px 0px;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 50px;
+    -fx-fill: #fff;
+}
