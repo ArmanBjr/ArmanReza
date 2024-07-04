@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.event.ActionEvent;
@@ -62,6 +63,84 @@ public class HomePageController implements Initializable {
     private ImageView ProfileImage;
 
     @FXML
+    private Label ProfileUsername;
+
+    @FXML
+    private Label ProfileUserUsername;
+
+    @FXML
+    private Label ProfileFirstName;
+
+    @FXML
+    private Label ProfileUserFirstName;
+
+    @FXML
+    private Label ProfileLastName;
+
+    @FXML
+    private Label ProfileUserLastName;
+
+    @FXML
+    private ImageView ProfileUserImage;
+
+    @FXML
+    private Label ProfilePhoneNumber;
+
+    @FXML
+    private Label ProfileEmail;
+
+    @FXML
+    private Label ProfileUserPhoneNumber;
+
+    @FXML
+    private Label ProfileUserEmail;
+
+    @FXML
+    private Label ProfilePassword;
+
+    @FXML
+    private Label ProfileUserPassword;
+
+    @FXML
+    private Button History;
+
+    @FXML
+    private Button Wallet;
+
+    @FXML
+    private Button Edit;
+    @FXML
+    private AnchorPane ProfilePage;
+    @FXML
+    private AnchorPane HomePageAnchor;
+    @FXML
+    private AnchorPane ProfileAnchor;
+    public void setValuesOnProfilePage() {
+        ProfileUserUsername.setText(GetUser.username);
+        ProfileUserFirstName.setText(GetUser.user.getFirstName());
+        ProfileUserLastName.setText(GetUser.user.getLastName());
+        ProfileUserPhoneNumber.setText(GetUser.user.getPhoneNumber());
+        ProfileUserEmail.setText(GetUser.user.getEmail());
+        ProfileUserPassword.setText(GetUser.user.getPassword());
+    }
+    public void switchForm(ActionEvent e) {
+        if (e.getSource() == Profile) {
+            Profile.setStyle("-fx-background-color: linear-gradient(to top right, #528560, #70f026)");
+            HomePage.setStyle("-fx-background-color: transparent");
+            ProfilePage.setVisible(true);
+            ProfileAnchor.setVisible(true);
+            HomePageAnchor.setVisible(false);
+        } else if (e.getSource() == HomePage) {
+            ProfilePage.setVisible(false);
+            ProfileAnchor.setVisible(false);
+            HomePageAnchor.setVisible(true);
+            Profile.setStyle("-fx-background-color: transparent");
+            HomePage.setStyle("-fx-background-color: linear-gradient(to top right, #528560, #70f026)");
+        }
+    }
+
+
+    @FXML
     void OnSignOutButtonClicked(ActionEvent event) throws IOException {
         SignOut.getScene().getWindow().hide();
         Parent root = FXMLLoader.load(getClass().getResource("SignView.fxml"));
@@ -85,8 +164,10 @@ public class HomePageController implements Initializable {
         try {
             //String uri = "file:" + GetUser.user.getImageUrl();
             //String url = "file:" + GetUser.imageUrl;
-            Image image = new Image(GetUser.imageUrl, 200, 150, false, true);
-            ProfileImage.setImage(image);
+            if(GetUser.imageUrl != null) {
+                Image image = new Image(GetUser.imageUrl, 200, 150, false, true);
+                ProfileImage.setImage(image);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,5 +186,6 @@ public class HomePageController implements Initializable {
         startClock();
         displayUsername();
         displayProfile();
+        setValuesOnProfilePage();
     }
 }

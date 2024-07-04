@@ -9,9 +9,58 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="1048.0" styleClass="top-form" stylesheets="@beautiHomePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.HomePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="1048.0" styleClass="top-form" stylesheets="@beautiHomePage.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.HomePageController">
    <children>
-      <AnchorPane layoutX="187.0" layoutY="39.0" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="187.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="39.0" />
+      <AnchorPane fx:id="ProfileAnchor" layoutX="187.0" layoutY="39.0" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="187.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="39.0">
+         <children>
+            <AnchorPane fx:id="ProfilePage" prefHeight="699.0" prefWidth="861.0">
+               <children>
+                  <Label fx:id="ProfileUsername" layoutX="59.0" layoutY="248.0" prefHeight="41.0" prefWidth="150.0" text="Username">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ProfileUserUsername" layoutX="59.0" layoutY="297.0" text="Label" />
+                  <Label fx:id="ProfileFirstName" layoutX="356.0" layoutY="248.0" prefHeight="41.0" prefWidth="150.0" text="FirstName">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ProfileUserFirstName" layoutX="356.0" layoutY="297.0" text="Label" />
+                  <Label fx:id="ProfileLastName" layoutX="614.0" layoutY="248.0" prefHeight="41.0" prefWidth="150.0" text="LastName">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ProfileUserLastName" layoutX="614.0" layoutY="297.0" text="Label" />
+                  <ImageView fx:id="ProfileUserImage" fitHeight="150.0" fitWidth="200.0" layoutX="356.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/3135715.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="ProfilePhoneNumber" layoutX="59.0" layoutY="361.0" prefHeight="45.0" prefWidth="195.0" text="PhoneNumber">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ProfileEmail" layoutX="356.0" layoutY="361.0" prefHeight="45.0" prefWidth="195.0" text="Email">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ProfileUserPhoneNumber" layoutX="59.0" layoutY="406.0" prefHeight="21.0" prefWidth="195.0" text="Label" />
+                  <Label fx:id="ProfileUserEmail" layoutX="356.0" layoutY="406.0" prefHeight="21.0" prefWidth="195.0" text="Label" />
+                  <Label fx:id="ProfilePassword" layoutX="614.0" layoutY="361.0" prefHeight="45.0" prefWidth="195.0" text="Password">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ProfileUserPassword" layoutX="614.0" layoutY="406.0" prefHeight="21.0" prefWidth="195.0" text="Label" />
+                  <Button fx:id="History" layoutX="433.0" layoutY="589.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="211.0" text="History" />
+                  <Button fx:id="Wallet" layoutX="139.0" layoutY="589.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="211.0" text="Wallet" />
+                  <Button fx:id="Edit" layoutX="350.0" layoutY="504.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" text="Edit" />
+               </children></AnchorPane>
+         </children></AnchorPane>
       <AnchorPane layoutY="40.0" prefHeight="700.0" prefWidth="186.0" styleClass="nav-form" stylesheets="@beautiHomePage.css">
          <children>
             <ImageView fx:id="ProfileImage" fitHeight="150.0" fitWidth="200.0" layoutX="18.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
@@ -29,12 +78,12 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Button fx:id="HomePage" layoutX="18.0" layoutY="273.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="HomePage" />
-            <Button fx:id="Exchange" layoutX="18.0" layoutY="303.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Exchange" />
-            <Button fx:id="Profile" layoutX="18.0" layoutY="395.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Profile" />
-            <Button fx:id="Swap" layoutX="18.0" layoutY="335.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Swap" />
-            <Button fx:id="Token" layoutX="18.0" layoutY="365.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Token" />
-            <Button fx:id="Transfer" layoutX="18.0" layoutY="425.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Transfer" />
+            <Button fx:id="HomePage" layoutX="18.0" layoutY="273.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="HomePage" />
+            <Button fx:id="Exchange" layoutX="18.0" layoutY="303.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Exchange" />
+            <Button fx:id="Profile" layoutX="18.0" layoutY="395.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Profile" />
+            <Button fx:id="Swap" layoutX="18.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Swap" />
+            <Button fx:id="Token" layoutX="18.0" layoutY="365.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Token" />
+            <Button fx:id="Transfer" layoutX="18.0" layoutY="425.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Transfer" />
             <Button fx:id="SignOut" layoutX="14.0" layoutY="656.0" mnemonicParsing="false" onAction="#OnSignOutButtonClicked" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="SIGN OUT" />
          </children>
       </AnchorPane>
@@ -44,7 +93,7 @@
             <Label fx:id="timeLabel" layoutX="123.0" layoutY="12.0" prefHeight="18.0" prefWidth="61.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="HomePageAnchor" layoutX="186.0" layoutY="40.0" prefHeight="700.0" prefWidth="869.0">
+      <AnchorPane fx:id="HomePageAnchor" layoutX="186.0" layoutY="40.0" prefHeight="700.0" prefWidth="869.0" visible="false">
          <children>
             <TableView fx:id="CoinInfoTable" editable="true" layoutX="167.0" layoutY="205.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="291.0" prefWidth="535.0">
               <columns>

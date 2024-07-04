@@ -193,17 +193,15 @@ public class SignController {
                             alert.setHeaderText(null);
                             alert.setContentText("successfully Login!");
                             alert.showAndWait();
+                            UserDAO.loadUsersFromDatabase();
+                            User user = UserDAO.userFinder1(SignInUsernameText.getText(), SignInPasswordText.getText());
                             GetUser.username = SignInUsernameText.getText();
+                            GetUser.user = user;
                             SignInsigningbutton.getScene().getWindow().hide();
                             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                             Stage stage = new Stage();
                             Scene scene = new Scene(root);
-                            UserDAO.loadUsersFromDatabase();
-                            User user = UserDAO.userFinder1(SignInUsernameText.getText(), SignInPasswordText.getText());
-                            GetUser.user = user;
-                            System.out.println(user.getImageUrl());
-                            GetUser.imageUrl = user.getImageUrl();
-                            System.out.println(user.getImageUrl());
+                            System.out.println(user);
                             stage.setScene(scene);
                             stage.show();
                         }

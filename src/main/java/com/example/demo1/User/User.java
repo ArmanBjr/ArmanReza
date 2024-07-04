@@ -47,7 +47,15 @@ public class User {
     public String getPassword() {
         return this.password;
     }
-
+    public String getFirstName() {
+        return this.firstName;
+    }
+    public String getLastName() {
+        return this.lastName;
+    }
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
     @Override
     public String toString() {
         return this.username + " " + this.password;
