@@ -4,21 +4,20 @@ import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.Observable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
@@ -58,6 +57,20 @@ public class HomePageController implements Initializable {
     @FXML
     private Button Transfer;
 
+    @FXML
+    private TableColumn<?, ?> TableChangeColumn;
+
+    @FXML
+    private TableColumn<?, ?> TableHighestPriceColumn;
+
+    @FXML
+    private TableColumn<?, ?> TableLowestColumn;
+
+    @FXML
+    private TableColumn<?, ?> TableMarketColumn;
+
+    @FXML
+    private TableColumn<?, ?> TablePriceColumn;
     @FXML
     private ImageView ProfileImage;
 
