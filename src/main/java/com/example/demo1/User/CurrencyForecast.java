@@ -15,7 +15,7 @@ public class CurrencyForecast {
         String password = "";
 
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
-            // Step 1: Find the last date in the database
+
             String lastDateQuery = "SELECT MAX(date) as lastDate FROM currency_rates";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(lastDateQuery);
@@ -29,7 +29,6 @@ public class CurrencyForecast {
                 throw new RuntimeException("No data found in the database.");
             }
 
-            // Step 2: Read existing data up to the last date
             String query = "SELECT date, time, usd, euro, toman, yen, GBP FROM currency_rates";
             resultSet = statement.executeQuery(query);
 
@@ -60,8 +59,6 @@ public class CurrencyForecast {
                 yenRegression.addData(timeInMillis, yen);
                 gpbRegression.addData(timeInMillis, gpb);
             }
-
-            // Step 3: Update the database with forecasted values from the last date to August 1, 2024
             String insertQuery = "INSERT INTO currency_rates (date, time, usd, euro, toman, yen, GBP) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
 
@@ -86,21 +83,18 @@ public class CurrencyForecast {
                 double forecastedYen = yenRegression.predict(forecastTimeInMillis);
                 double forecastedGpb = gpbRegression.predict(forecastTimeInMillis);
 
-                // Convert negative values to positive
                 forecastedUsd = Math.abs(forecastedUsd);
                 forecastedEuro = Math.abs(forecastedEuro);
                 forecastedToman = Math.abs(forecastedToman);
                 forecastedYen = Math.abs(forecastedYen);
                 forecastedGpb = Math.abs(forecastedGpb);
 
-                // Round to 2 decimal places
                 forecastedUsd = Math.round(forecastedUsd * 100.0) / 100.0;
                 forecastedEuro = Math.round(forecastedEuro * 100.0) / 100.0;
                 forecastedToman = Math.round(forecastedToman * 100.0) / 100.0;
                 forecastedYen = Math.round(forecastedYen * 100.0) / 100.0;
                 forecastedGpb = Math.round(forecastedGpb * 100.0) / 100.0;
 
-                // Update the record
                 preparedStatement.setDate(1, new java.sql.Date(forecastDate.getTime()));
                 preparedStatement.setTime(2, forecastTime);
                 preparedStatement.setDouble(3, forecastedUsd);
@@ -111,7 +105,6 @@ public class CurrencyForecast {
 
                 preparedStatement.addBatch();
 
-                // Move to the next minute
                 forecastCalendar.add(Calendar.MINUTE, 1);
             }
 

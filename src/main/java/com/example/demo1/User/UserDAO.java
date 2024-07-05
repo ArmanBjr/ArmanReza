@@ -80,7 +80,7 @@ public class UserDAO {
     }
     public static User userFinder1(String username, String password) {
         for (User user: users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+            if (user.getUsername().equals(username)) {
                 return user;
             }
         }

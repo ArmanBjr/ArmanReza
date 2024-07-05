@@ -16,6 +16,8 @@
 }
 .nav-btn:hover {
     -fx-background-color: linear-gradient(to top right, #528560, #70f026);
+    transform: translateX(-10px);
+    transition: 1s;
 }
 
 .table-view {
@@ -36,4 +38,19 @@
     -fx-background-color: transparent;
     -fx-size: 50px;
     -fx-fill: #fff;
+}
+.edit-button {
+    -fx-background-color: linear-gradient(to top right, #449e5e, #4fff90);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+.edit-button:hover {
+    -fx-background-color: linear-gradient(to top left, #4fff90, #70f026);
+    transform: scale(1.2);
+    transition: 2s;
+}
+
+.anchor-pane {
+    -fx-border-radius: 10px;
+    -fx-border-color: #449e5e;
 }

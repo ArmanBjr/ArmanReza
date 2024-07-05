@@ -16,6 +16,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import com.example.demo1.User.UserDAO;
+import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
+
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
@@ -197,11 +199,11 @@ public class SignController {
                             User user = UserDAO.userFinder1(SignInUsernameText.getText(), SignInPasswordText.getText());
                             GetUser.username = SignInUsernameText.getText();
                             GetUser.user = user;
+                            System.out.println("getuser user is " + GetUser.user);
                             SignInsigningbutton.getScene().getWindow().hide();
                             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                             Stage stage = new Stage();
                             Scene scene = new Scene(root);
-                            System.out.println(user);
                             stage.setScene(scene);
                             stage.show();
                         }
@@ -238,6 +240,7 @@ public class SignController {
             Image image = new Image(file.toURI().toString(), 46, 45, false, true);
             SignUpProfileImage.setImage(image);
             imageUrl = file.toURI().toString();
+            GetUser.imageUrl = imageUrl;
         }
     }
     public void setSignInCaptchaButtonClicked(ActionEvent event) throws InterruptedException {
