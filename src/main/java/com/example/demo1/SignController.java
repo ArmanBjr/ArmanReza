@@ -140,6 +140,11 @@ public class SignController {
             }
             else {
                 prepare.execute();
+                String text = "Congratulations!!!\nyou have created a new account in Reza and Arman's exchange market!\n" +
+                        "information of your account:" +
+                        "\nemail: " + SignUpEmailText.getText() +
+                        "\npassword: " + SignUpPasswordText.getText();
+                String subject = "Account Created!";
                 alert.setContentText("successfully signed up");
                 alert.showAndWait();
                 SignUpEmailText.setText("");
@@ -151,6 +156,7 @@ public class SignController {
                 SignUpRepeatPasswordText.setText("");
                 SignUpPage.setVisible(false);
                 SignInPage.setVisible(true);
+                SendEmail.emailSender(SignUpEmailText.getText(), text, subject);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -250,5 +256,12 @@ public class SignController {
         isOk = captchaApp.showCaptcha();
         isCaptchaVerified = isOk;
         SignInCaptchaButton.setSelected(isOk);
+    }
+    public void OnForgetPassClicked(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("ForgetPass.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

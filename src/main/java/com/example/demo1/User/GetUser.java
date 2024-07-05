@@ -8,4 +8,6 @@ public class GetUser {
     public static String email;
     public static String phoneNumber;
     public static String imageUrl;
+
+    public static String ForgetEmail;
 }

@@ -6,6 +6,7 @@ module com.example.demo1 {
     requires org.apache.poi.ooxml;
     requires com.opencsv;
     requires commons.math3;
+    requires java.mail;
 
 
     opens com.example.demo1 to javafx.fxml;
