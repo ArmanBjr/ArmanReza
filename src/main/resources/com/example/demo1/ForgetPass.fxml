@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #6dc219;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.ForgetPassController">
    <children>
       <AnchorPane layoutX="42.0" layoutY="35.0" prefHeight="331.0" prefWidth="517.0" style="-fx-background-color: #53a600;">
