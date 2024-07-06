@@ -89,7 +89,7 @@ public class TomanChartController {
                     updateLabels();
                 });
             }
-        }, 0, 1000);  // Update every minute
+        }, 0, 60000);
     }
 
     private void updateChart() {

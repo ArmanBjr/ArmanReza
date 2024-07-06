@@ -88,9 +88,8 @@ public class UsdChartController {
                     updateLabels();
                 });
             }
-        }, 0, 1000);
+        }, 0, 60000);
     }
-
     private void updateChart() {
         if (situ == 2) {
             xAxis.setLabel("Hour");

@@ -43,6 +43,28 @@ import java.util.*;
 
 public class HomePageController implements Initializable {
     public User user;
+    @FXML
+    private TableView<?> HistoryPageTable;
+
+    @FXML
+    private TableColumn<?, ?> HistoryPageTableAmount;
+
+    @FXML
+    private TableColumn<?, ?> HistoryPageTableCurrency;
+
+    @FXML
+    private TableColumn<?, ?> HistoryPageTableDate;
+
+    @FXML
+    private TableColumn<?, ?> HistoryPageTableID;
+
+    @FXML
+    private TableColumn<?, ?> HistoryPageTableSituation;
+
+    @FXML
+    private TableColumn<?, ?> HistoryPageTableTime;
+    @FXML
+    private Button WalletPageExit;
 
     @FXML
     private Label CurrentProperty;
@@ -79,7 +101,8 @@ public class HomePageController implements Initializable {
 
     @FXML
     private MenuItem Euro;
-
+    @FXML
+    private AnchorPane HistoryPage;
     @FXML
     private Button SignOut;
 
@@ -299,18 +322,33 @@ public class HomePageController implements Initializable {
     }
     public void switchForm(ActionEvent e) {
         if (e.getSource() == Profile) {
+            HistoryPage.setVisible(false);
             ProfilePage.setVisible(true);
             ProfileAnchor.setVisible(true);
             HomePageAnchor.setVisible(false);
             WalletAnchor.setVisible(false);
         } else if (e.getSource() == HomePage) {
+            HistoryPage.setVisible(true);
             ProfilePage.setVisible(false);
             ProfileAnchor.setVisible(false);
             WalletAnchor.setVisible(false);
             HomePageAnchor.setVisible(true);
         } else if(e.getSource() == Wallet) {
+            HistoryPage.setVisible(false);
             WalletAnchor.setVisible(true);
             ProfilePage.setVisible(false);
+            ProfileAnchor.setVisible(true);
+            HomePageAnchor.setVisible(false);
+        } else if (e.getSource() == History) {
+            HistoryPage.setVisible(true);
+            WalletAnchor.setVisible(false);
+            ProfilePage.setVisible(false);
+            ProfileAnchor.setVisible(true);
+            HomePageAnchor.setVisible(false);
+        } else if (e.getSource() == WalletPageExit) {
+            HistoryPage.setVisible(false);
+            WalletAnchor.setVisible(false);
+            ProfilePage.setVisible(true);
             ProfileAnchor.setVisible(true);
             HomePageAnchor.setVisible(false);
         }

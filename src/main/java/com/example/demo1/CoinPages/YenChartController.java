@@ -89,7 +89,7 @@ public class YenChartController {
                     updateLabels();
                 });
             }
-        }, 0, 1000);  // Update every minute
+        }, 0, 60000);  // Update every minute
     }
 
     private void updateChart() {
