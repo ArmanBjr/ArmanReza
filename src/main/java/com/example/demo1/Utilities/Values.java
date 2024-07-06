@@ -1,9 +1,9 @@
 package com.example.demo1.Utilities;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Values {
     public static double getChangePercentage(Connection connection, String column, String date, String time) throws SQLException {
@@ -37,6 +37,60 @@ public class Values {
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
             return resultSet.getDouble("highest");
+        }
+        return 0.0;
+    }
+    public static int getID() {
+        String query = "SELECT ID FROM id";
+        int id = -1;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            if (rs.next()) {
+                id = rs.getInt("ID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+    public static void incrementID() {
+        int currentID = getID();
+        int newID = currentID + 1;
+
+        String updateQuery = "UPDATE id SET ID = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+             PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+
+            pstmt.setInt(1, newID);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private static String jdbcURL = "jdbc:mysql://localhost:3306/exchange";
+    private static String username = "root";
+    private static String password = "";
+    public static double Value(String name) {
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
+            LocalDate currentDate = LocalDate.now();
+            LocalTime currentTime = LocalTime.now();
+            String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            String query = "SELECT euro, usd, GBP, toman, yen FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 1";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, formattedDate + " " + formattedTime);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getDouble(name);
+            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
         }
         return 0.0;
     }

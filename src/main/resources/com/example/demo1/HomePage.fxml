@@ -15,7 +15,7 @@
    <children>
       <AnchorPane fx:id="ProfileAnchor" layoutX="187.0" layoutY="39.0" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="187.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="39.0">
          <children>
-            <AnchorPane fx:id="ProfilePage" prefHeight="699.0" prefWidth="861.0">
+            <AnchorPane fx:id="ProfilePage" prefHeight="699.0" prefWidth="861.0" visible="false">
                <children>
                   <Label fx:id="ProfileUsername" layoutX="59.0" layoutY="248.0" prefHeight="41.0" prefWidth="150.0" text="Username">
                      <font>
@@ -53,16 +53,38 @@
                      </font>
                   </Label>
                   <Label fx:id="ProfileUserPassword" layoutX="614.0" layoutY="406.0" prefHeight="21.0" prefWidth="195.0" text="Label" />
-                  <Button fx:id="History" layoutX="433.0" layoutY="589.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="211.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="History" />
-                  <Button fx:id="Wallet" layoutX="139.0" layoutY="589.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="211.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Wallet" />
-                  <Button fx:id="Edit" layoutX="350.0" layoutY="504.0" mnemonicParsing="false" onAction="#onEditClicked" prefHeight="31.0" prefWidth="83.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Edit" AnchorPane.bottomAnchor="164.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="428.0" AnchorPane.topAnchor="504.0" />
+                  <Button fx:id="History" layoutX="475.0" layoutY="589.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="211.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="History" />
+                  <Button fx:id="Wallet" layoutX="181.0" layoutY="589.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="45.0" prefWidth="211.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Wallet" />
+                  <Button fx:id="Edit" layoutX="392.0" layoutY="501.0" mnemonicParsing="false" onAction="#onEditClicked" prefHeight="31.0" prefWidth="83.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Edit" AnchorPane.bottomAnchor="167.0" AnchorPane.leftAnchor="392.0" AnchorPane.rightAnchor="386.0" AnchorPane.topAnchor="501.0" />
+                  <ImageView fx:id="ProfileUserImage" fitHeight="150.0" fitWidth="200.0" layoutX="356.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/3135715.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
-            <ImageView fx:id="ProfileUserImage" fitHeight="150.0" fitWidth="200.0" layoutX="356.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../images/3135715.png" />
-               </image>
-            </ImageView>
+            <AnchorPane fx:id="WalletAnchor" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="366.0" layoutY="14.0" style="-fx-border-radius: 20px; -fx-border-color: #449e5e;" text="WALLET" textFill="WHITE">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="340.0" layoutY="69.0" text="Current Property">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="CurrentProperty" layoutX="404.0" layoutY="104.0" prefHeight="18.0" prefWidth="53.0" text="property" />
+                  <TableView fx:id="FirstCurrecnyTable" layoutX="303.0" layoutY="142.0" prefHeight="291.0" prefWidth="256.0">
+                    <columns>
+                      <TableColumn fx:id="FirstCurrecnyTableCurrency" prefWidth="75.0" text="Currency" />
+                      <TableColumn fx:id="FirstCurrecnyTableUserProperty" prefWidth="110.0" text="User Property" />
+                        <TableColumn fx:id="FirstCurrecnyTablePrice" prefWidth="75.0" text="Price" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
          </children></AnchorPane>
       <AnchorPane layoutY="40.0" prefHeight="700.0" prefWidth="186.0" styleClass="nav-form" stylesheets="@beautiHomePage.css">
          <children>
@@ -120,6 +142,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#OnMenuButtonYenClicked" text="Yen" />
               </items>
             </MenuButton>
+            <Label layoutX="230.0" layoutY="64.0" style="-fx-border-color: #449e5e; -fx-border-radius: 20px;" text="WELCOME to Home Page">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

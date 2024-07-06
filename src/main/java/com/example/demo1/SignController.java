@@ -1,8 +1,10 @@
 package com.example.demo1;
 
+import com.example.demo1.CurrencyManagement.Wallet;
 import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
 import com.example.demo1.User.UserDAO;
+import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -95,7 +97,7 @@ public class SignController {
         }
     }
     public void onSignUpsignupbuttonClicked(ActionEvent event) {
-        String sql = "INSERT INTO info (email, username, password, FirstName, LastName, phoneNumber, Image) VALUEs (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO info (email, username, password, FirstName, LastName, phoneNumber, Image, WalletID) VALUEs (?,?,?,?,?,?,?,?)";
         connect = DataBase.connectDb();
         try{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -139,11 +141,19 @@ public class SignController {
                 alert1.showAndWait();
             }
             else {
+                UserDAO.getAllUsers();
+                User user = new User(SignUpUsernameText.getText(), SignUpEmailText.getText(), SignUpPasswordText.getText(),
+                        SignUpFirstNameText.getText(), SignUpLastNameText.getText(), SignUpPhoneNumberText.getText(),
+                        SignUpProfileImage.getImage().getUrl());
+                user.wallet = new Wallet();
+                Wallet.addUser(SignUpUsernameText.getText());
+                prepare.setInt(8, user.wallet.getID());
                 prepare.execute();
                 String text = "Congratulations!!!\nyou have created a new account in Reza and Arman's exchange market!\n" +
                         "information of your account:" +
                         "\nemail: " + SignUpEmailText.getText() +
                         "\npassword: " + SignUpPasswordText.getText();
+                UserDAO.users.add(user);
                 String subject = "Account Created!";
                 alert.setContentText("successfully signed up");
                 alert.showAndWait();
@@ -156,7 +166,7 @@ public class SignController {
                 SignUpRepeatPasswordText.setText("");
                 SignUpPage.setVisible(false);
                 SignInPage.setVisible(true);
-                SendEmail.emailSender(SignUpEmailText.getText(), text, subject);
+                //SendEmail.emailSender(SignUpEmailText.getText(), text, subject);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +215,9 @@ public class SignController {
                             User user = UserDAO.userFinder1(SignInUsernameText.getText(), SignInPasswordText.getText());
                             GetUser.username = SignInUsernameText.getText();
                             GetUser.user = user;
+                            Wallet.findUser(GetUser.username);
                             System.out.println("getuser user is " + GetUser.user);
+                            System.out.println(GetUser.user.wallet);
                             SignInsigningbutton.getScene().getWindow().hide();
                             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                             Stage stage = new Stage();
@@ -251,11 +263,13 @@ public class SignController {
     }
     public void setSignInCaptchaButtonClicked(ActionEvent event) throws InterruptedException {
         SignInCaptchaButton.setSelected(false);
-        CaptchaApp captchaApp = new CaptchaApp();
-        boolean isOk;
-        isOk = captchaApp.showCaptcha();
-        isCaptchaVerified = isOk;
-        SignInCaptchaButton.setSelected(isOk);
+        Thread captchaThread = new Thread(() -> {
+            CaptchaApp captchaApp = new CaptchaApp();
+            captchaApp.showCaptcha();
+            isCaptchaVerified = CaptchaApp.isVerified;
+            Platform.runLater(() -> SignInCaptchaButton.setSelected(CaptchaApp.isVerified));
+        });
+        captchaThread.start();
     }
     public void OnForgetPassClicked(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("ForgetPass.fxml"));

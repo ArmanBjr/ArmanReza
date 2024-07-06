@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class CaptchaApp extends JFrame {
     //@Override
-
+    public static boolean isVerified = false;
     private String captchaString;
     private BufferedImage captchaImage;
     private JTextField inputField;
@@ -34,7 +34,7 @@ public class CaptchaApp extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (inputField.getText().equals(captchaString)) {
                     JOptionPane.showMessageDialog(CaptchaApp.this, "CAPTCHA Verified!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    // Close the CAPTCHA window and return true
+                    isVerified = true;
                     dispose();
                     synchronized (CaptchaApp.class) {
                         CaptchaApp.class.notify();
@@ -121,7 +121,7 @@ public class CaptchaApp extends JFrame {
 
         return bufferedImage;
     }
-    public static boolean showCaptcha() {
+    public static void showCaptcha() {
         final boolean[] result = {false};
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -140,6 +140,5 @@ public class CaptchaApp extends JFrame {
             }
         }
 
-        return result[0];
     }
 }

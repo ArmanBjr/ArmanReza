@@ -1,9 +1,11 @@
 package com.example.demo1;
 
 import com.example.demo1.Coins.CoinInfo;
+import com.example.demo1.CurrencyManagement.CurrencyData;
 import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
 import com.example.demo1.Utilities.FixedSizeList;
+import com.example.demo1.Utilities.Values;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -37,13 +39,27 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class HomePageController implements Initializable {
     public User user;
+
+    @FXML
+    private Label CurrentProperty;
+    @FXML
+    private TableView<CurrencyData> FirstCurrecnyTable;
+
+    @FXML
+    private TableColumn<CurrencyData, String> FirstCurrecnyTableCurrency;
+
+    @FXML
+    private TableColumn<CurrencyData, Double> FirstCurrecnyTablePrice;
+
+    @FXML
+    private TableColumn<CurrencyData, Double> FirstCurrecnyTableUserProperty;
+    @FXML
+    private AnchorPane WalletAnchor;
+
     @FXML
     private Tab HomePageProfile;
     @FXML
@@ -160,40 +176,118 @@ public class HomePageController implements Initializable {
     private AnchorPane HomePageProfileEdit;
     @FXML
     private ImageView EditImage;
+    private double getUserProperty(String currency) {
+        switch (currency.toLowerCase()) {
+            case "euro":
+                return GetUser.user.getWallet().CurrentEuro;
+            case "usd":
+                return GetUser.user.getWallet().CurrentUsd;
+            case "gbp":
+                return GetUser.user.getWallet().CurentGbp;
+            case "toman":
+                return GetUser.user.getWallet().CurrentToman;
+            case "yen":
+                return GetUser.user.getWallet().CurrentYen;
+            default:
+                throw new IllegalArgumentException("Unknown currency: " + currency);
+        }
+    }
+    public void displayWalletValues() {
+        List<CurrencyData> currencyDataList = new ArrayList<>();
+        String[] currencies = {"euro", "usd", "GBP", "toman", "yen"};
+        for (String currency : currencies) {
+            double price = Values.Value(currency);
+            double userProperty = getUserProperty(currency);
+            currencyDataList.add(new CurrencyData(currency, price, userProperty));
+        }
+        FirstCurrecnyTable.getItems().setAll(currencyDataList);
+
+    }
     public void OnMenuButtonEuroClicked(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("EuroChart.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread euroChartThread = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("EuroChart.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        euroChartThread.start();
     }
     public void OnMenuButtonTomanClicked(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("TomanChart.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread TomanChartThread = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("TomanChart.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        TomanChartThread.start();
     }
     public void OnMenuButtonUsdClicked(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("UsdChart.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread UsdChartThread = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("UsdChart.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        UsdChartThread.start();
     }
     public void OnMenuButtonYenClicked(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("YenChart.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread YenChartThread = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("YenChart.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        YenChartThread.start();
     }
     public void OnMenuButtonGbpClicked(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("GbpChart.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread GbpChartThread = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("GbpChart.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        GbpChartThread.start();
+    }
+    public void displayCurrentProperty() {
+        GetUser.user.wallet.setCurrentProperty();
+        double newValue = GetUser.user.wallet.currentProperty;
+        String formattedValue = String.format("%.2f", newValue);
+        Platform.runLater(() -> CurrentProperty.setText(formattedValue));
     }
     public void setValuesOnProfilePage() {
         ProfileUserUsername.setText(GetUser.username);
@@ -205,19 +299,20 @@ public class HomePageController implements Initializable {
     }
     public void switchForm(ActionEvent e) {
         if (e.getSource() == Profile) {
-            Profile.setStyle("-fx-background-color: linear-gradient(to top right, #528560, #70f026)");
-            HomePage.setStyle("-fx-background-color: transparent");
             ProfilePage.setVisible(true);
             ProfileAnchor.setVisible(true);
             HomePageAnchor.setVisible(false);
+            WalletAnchor.setVisible(false);
         } else if (e.getSource() == HomePage) {
             ProfilePage.setVisible(false);
             ProfileAnchor.setVisible(false);
+            WalletAnchor.setVisible(false);
             HomePageAnchor.setVisible(true);
-            Profile.setStyle("-fx-background-color: transparent");
-            HomePage.setStyle("-fx-background-color: linear-gradient(to top right, #528560, #70f026)");
-        } else if (e.getSource() == Edit) {
-
+        } else if(e.getSource() == Wallet) {
+            WalletAnchor.setVisible(true);
+            ProfilePage.setVisible(false);
+            ProfileAnchor.setVisible(true);
+            HomePageAnchor.setVisible(false);
         }
     }
 
@@ -274,19 +369,26 @@ public class HomePageController implements Initializable {
         displayUsername();
         displayProfile();
         setValuesOnProfilePage();
-        // Initialize the table columns
+        displayCurrentProperty();
         TableMarketColumn.setCellValueFactory(new PropertyValueFactory<>("market"));
         TablePriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         TableHighestPriceColumn.setCellValueFactory(new PropertyValueFactory<>("highestPrice"));
         TableLowestColumn.setCellValueFactory(new PropertyValueFactory<>("lowestPrice"));
         TableChangeColumn.setCellValueFactory(new PropertyValueFactory<>("changePercentage"));
-
-        // Set the data to the table
         CoinInfoTable.setItems(coinData);
-
-        // Schedule the update task to run every minute
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new UpdateTask(), 0, 60000);
+        FirstCurrecnyTableCurrency.setCellValueFactory(new PropertyValueFactory<>("currency"));
+        FirstCurrecnyTablePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+        FirstCurrecnyTableUserProperty.setCellValueFactory(new PropertyValueFactory<>("userProperty"));
+
+        displayWalletValues();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> displayWalletValues());
+            }
+        }, 0, 60000); // آ
     }
     private double getChangePercentage(Connection connection, String column, String date, String time) throws SQLException {
         String query = "SELECT " + column + " FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 2";
@@ -326,21 +428,17 @@ public class HomePageController implements Initializable {
         @Override
         public void run() {
             Platform.runLater(() -> displayTable());
+            displayCurrentProperty();
         }
     }
     public void displayTable() {
         List<CoinInfo> coins = null;
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
-            // Clear the current data
             coinData.clear();
-
-            // Get the current date and time
             LocalDate currentDate = LocalDate.now();
             LocalTime currentTime = LocalTime.now();
             String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
-            // Query to get the latest values up to current date and time
             String query = "SELECT euro, usd, GBP, toman, yen FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 1";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, formattedDate + " " + formattedTime);
@@ -375,10 +473,19 @@ public class HomePageController implements Initializable {
         }
     }
     public void onEditClicked(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ProfileEdit.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread EditPage = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("ProfileEdit.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        EditPage.start();
     }
 }

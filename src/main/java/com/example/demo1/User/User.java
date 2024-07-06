@@ -1,5 +1,7 @@
 package com.example.demo1.User;
 
+import com.example.demo1.CurrencyManagement.Wallet;
+
 public class User {
     private String username;
     private String firstName;
@@ -8,6 +10,7 @@ public class User {
     private String phoneNumber;
     private String email;
     private String imageUrl;
+    public Wallet wallet;
     public User(String username, String email, String password, String firstName, String lastName, String phoneNumber, String imageUrl) {
         setEmail(email);
         setName(firstName, lastName);
@@ -59,5 +62,11 @@ public class User {
     @Override
     public String toString() {
         return this.username + " " + this.password;
+    }
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+    public Wallet getWallet() {
+        return this.wallet;
     }
 }

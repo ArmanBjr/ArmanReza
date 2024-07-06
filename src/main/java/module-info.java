@@ -11,8 +11,10 @@ module com.example.demo1 {
 
     opens com.example.demo1 to javafx.fxml;
     opens com.example.demo1.Coins to javafx.base;
+    opens com.example.demo1.CurrencyManagement to javafx.base;
     exports com.example.demo1;
     exports com.example.demo1.Coins;
     exports com.example.demo1.CoinPages;
+    exports com.example.demo1.CurrencyManagement;
     opens com.example.demo1.CoinPages to javafx.fxml;
 }
