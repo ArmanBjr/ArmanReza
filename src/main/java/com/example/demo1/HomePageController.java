@@ -3,10 +3,12 @@ package com.example.demo1;
 import com.example.demo1.Coins.CoinInfo;
 import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
+import com.example.demo1.Utilities.FixedSizeList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,6 +37,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -227,6 +231,9 @@ public class HomePageController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+    private static final double ROW_HEIGHT = 40.0; // یا هر مقداری که برای ارتفاع هر ردیف مناسب است
+    private static final int NUM_ROWS = 6; // تعداد ردیف‌های مورد نظر
+
     @FXML
     private Label Username;
 
@@ -322,6 +329,7 @@ public class HomePageController implements Initializable {
         }
     }
     public void displayTable() {
+        List<CoinInfo> coins = null;
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password)) {
             // Clear the current data
             coinData.clear();
@@ -344,14 +352,23 @@ public class HomePageController implements Initializable {
                 double gpb = resultSet.getDouble("GBP");
                 double toman = resultSet.getDouble("toman");
                 double yen = resultSet.getDouble("yen");
-
                 // Add rows to the table
+                coins = List.of(
+                        new CoinInfo("Euro", euro, getHighestPrice(connection, "euro", formattedDate, formattedTime), getLowestPrice(connection, "euro", formattedDate, formattedTime), getChangePercentage(connection, "euro", formattedDate, formattedTime)),
+                        new CoinInfo("USD", usd, getHighestPrice(connection, "usd", formattedDate, formattedTime), getLowestPrice(connection, "usd", formattedDate, formattedTime), getChangePercentage(connection, "usd", formattedDate, formattedTime)),
+                        new CoinInfo("GPB", gpb, getHighestPrice(connection, "GBP", formattedDate, formattedTime), getLowestPrice(connection, "GBP", formattedDate, formattedTime), getChangePercentage(connection, "GBP", formattedDate, formattedTime)),
+                        new CoinInfo("Toman", toman, getHighestPrice(connection, "toman", formattedDate, formattedTime), getLowestPrice(connection, "toman", formattedDate, formattedTime), getChangePercentage(connection, "toman", formattedDate, formattedTime)),
+                        new CoinInfo("Yen", yen, getHighestPrice(connection, "yen", formattedDate, formattedTime), getLowestPrice(connection, "yen", formattedDate, formattedTime), getChangePercentage(connection, "yen", formattedDate, formattedTime))
+                );
                 coinData.add(new CoinInfo("Euro", euro, getHighestPrice(connection, "euro", formattedDate, formattedTime), getLowestPrice(connection, "euro", formattedDate, formattedTime), getChangePercentage(connection, "euro", formattedDate, formattedTime)));
                 coinData.add(new CoinInfo("USD", usd, getHighestPrice(connection, "usd", formattedDate, formattedTime), getLowestPrice(connection, "usd", formattedDate, formattedTime), getChangePercentage(connection, "usd", formattedDate, formattedTime)));
                 coinData.add(new CoinInfo("GPB", gpb, getHighestPrice(connection, "GBP", formattedDate, formattedTime), getLowestPrice(connection, "GBP", formattedDate, formattedTime), getChangePercentage(connection, "GBP", formattedDate, formattedTime)));
                 coinData.add(new CoinInfo("Toman", toman, getHighestPrice(connection, "toman", formattedDate, formattedTime), getLowestPrice(connection, "toman", formattedDate, formattedTime), getChangePercentage(connection, "toman", formattedDate, formattedTime)));
                 coinData.add(new CoinInfo("Yen", yen, getHighestPrice(connection, "yen", formattedDate, formattedTime), getLowestPrice(connection, "yen", formattedDate, formattedTime), getChangePercentage(connection, "yen", formattedDate, formattedTime)));
             }
+            coinData.setAll(new FixedSizeList<>(coins));
+            CoinInfoTable.setFixedCellSize(ROW_HEIGHT);
+            CoinInfoTable.prefHeightProperty().bind(Bindings.size(CoinInfoTable.getItems()).multiply(ROW_HEIGHT).add(30).add(ROW_HEIGHT * (NUM_ROWS - coinData.size())));
 
         } catch (SQLException e) {
             e.printStackTrace();

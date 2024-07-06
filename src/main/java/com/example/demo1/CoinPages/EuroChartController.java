@@ -3,10 +3,12 @@ package com.example.demo1.CoinPages;
 import com.example.demo1.DataBase;
 import com.example.demo1.Utilities.Values;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
@@ -43,6 +45,12 @@ public class EuroChartController {
     private Label Price;
 
     private XYChart.Series<Number, Number> series;
+    @FXML
+    private Button DailyChange;
+    @FXML
+    private Button MonthluChange;
+    @FXML
+    private Button minuteChange;
 
 
     @FXML
@@ -66,28 +74,81 @@ public class EuroChartController {
                     updateLabels();
                 });
             }
-        }, 0, 60000);  // Update every minute
+        }, 0, 60000);
     }
-
+    private int situ = 1;
+    public void switchSitu(ActionEvent event) {
+        if(event.getSource() == minuteChange) {
+            xAxis.setLabel("minute");
+            updateChartForLast30Minutes();
+            situ = 1;
+        } else if (event.getSource() == DailyChange) {
+            xAxis.setLabel("Hour");
+            situ = 2;
+            updateChart();
+        } else if (event.getSource() == MonthluChange) {
+            xAxis.setLabel("day");
+            updateChartForLast30Days();
+            situ = 3;
+        }
+    }
     private void updateChart() {
-        LocalDateTime now = LocalDateTime.now();
+        if (situ == 2) {
+
+            xAxis.setLabel("Hour");
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+            series.getData().clear();
+
+            for (int i = 23; i >= 0; i--) {
+                LocalDateTime startOfHour = now.minusHours(i).withMinute(0).withSecond(0).withNano(0);
+                LocalDateTime endOfHour = startOfHour.plusHours(1);
+
+                String startOfHourDate = startOfHour.format(dateFormatter);
+                String startOfHourTime = startOfHour.format(timeFormatter);
+                String endOfHourDate = endOfHour.format(dateFormatter);
+                String endOfHourTime = endOfHour.format(timeFormatter);
+
+                String query = "SELECT AVG(euro) as avg_euro FROM currency_rates WHERE " +
+                        "(date = '" + startOfHourDate + "' AND time >= '" + startOfHourTime + "') OR " +
+                        "(date = '" + endOfHourDate + "' AND time < '" + endOfHourTime + "')";
+
+                try (Connection conn = DataBase.connectDb();
+                     Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery(query)) {
+
+                    if (rs.next()) {
+                        double avgPrice = rs.getDouble("avg_euro");
+                        series.getData().add(new XYChart.Data<>(24 - i, avgPrice));
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                xAxis.setLowerBound(0);
+                xAxis.setUpperBound(24);
+                xAxis.setTickUnit(1);
+            }
+        } else if (situ == 1) {
+            xAxis.setLabel("minute");
+            updateChartForLast30Minutes();
+        } else {
+            xAxis.setLabel("Day");
+            updateChartForLast30Days();
+        }
+    }
+    private void updateChartForLast30Days() {
+        LocalDate now = LocalDate.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         series.getData().clear();
 
-        for (int i = 23; i >= 0; i--) {
-            LocalDateTime startOfHour = now.minusHours(i).withMinute(0).withSecond(0).withNano(0);
-            LocalDateTime endOfHour = startOfHour.plusHours(1);
+        for (int i = 29; i >= 0; i--) {
+            LocalDate date = now.minusDays(i);
+            String dateString = date.format(dateFormatter);
 
-            String startOfHourDate = startOfHour.format(dateFormatter);
-            String startOfHourTime = startOfHour.format(timeFormatter);
-            String endOfHourDate = endOfHour.format(dateFormatter);
-            String endOfHourTime = endOfHour.format(timeFormatter);
-
-            String query = "SELECT AVG(euro) as avg_euro FROM currency_rates WHERE " +
-                    "(date = '" + startOfHourDate + "' AND time >= '" + startOfHourTime + "') OR " +
-                    "(date = '" + endOfHourDate + "' AND time < '" + endOfHourTime + "')";
+            String query = "SELECT AVG(euro) as avg_euro FROM currency_rates WHERE date = '" + dateString + "'";
 
             try (Connection conn = DataBase.connectDb();
                  Statement stmt = conn.createStatement();
@@ -95,12 +156,52 @@ public class EuroChartController {
 
                 if (rs.next()) {
                     double avgPrice = rs.getDouble("avg_euro");
-                    series.getData().add(new XYChart.Data<>(24 - i, avgPrice));
+                    series.getData().add(new XYChart.Data<>(30 - i, avgPrice));
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(30);
+        xAxis.setTickUnit(1);
+    }
+
+    private void updateChartForLast30Minutes() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        series.getData().clear();
+
+        for (int i = 30; i >= 0; i--) {
+            LocalDateTime startOfMinute = now.minusMinutes(i).withSecond(0).withNano(0);
+            LocalDateTime endOfMinute = startOfMinute.plusMinutes(1);
+
+            String startOfMinuteDate = startOfMinute.format(dateFormatter);
+            String startOfMinuteTime = startOfMinute.format(timeFormatter);
+            String endOfMinuteDate = endOfMinute.format(dateFormatter);
+            String endOfMinuteTime = endOfMinute.format(timeFormatter);
+
+            String query = "SELECT AVG(euro) as avg_euro FROM currency_rates WHERE " +
+                    "(date = '" + startOfMinuteDate + "' AND time >= '" + startOfMinuteTime + "') OR " +
+                    "(date = '" + endOfMinuteDate + "' AND time < '" + endOfMinuteTime + "')";
+
+            try (Connection conn = DataBase.connectDb();
+                 Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(query)) {
+
+                if (rs.next()) {
+                    double avgPrice = rs.getDouble("avg_euro");
+                    series.getData().add(new XYChart.Data<>(30 - i, avgPrice));
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(30);
+        xAxis.setTickUnit(1);
     }
 
     public void updateLabels() {
