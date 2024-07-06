@@ -86,23 +86,26 @@
                   <Button fx:id="WalletPageExit" layoutX="418.0" layoutY="630.0" mnemonicParsing="false" onAction="#switchForm" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="EXIT" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="HistoryPage" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="HistoryPage" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="329.0" layoutY="58.0" style="-fx-background-color: linear-gradient(to top right, #9ced8c, #7bed64); -fx-border-radius: 20px; -fx-border-color: #2bf202;" text="History Page">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="HistoryPageTable" layoutX="206.0" layoutY="156.0" prefHeight="314.0" prefWidth="460.0">
+                  <TableView fx:id="HistoryPageTable" layoutX="57.0" layoutY="144.0" prefHeight="427.0" prefWidth="748.0">
                     <columns>
                       <TableColumn fx:id="HistoryPageTableID" prefWidth="37.0" text="ID" />
-                      <TableColumn fx:id="HistoryPageTableDate" prefWidth="91.0" text="DATE" />
-                        <TableColumn fx:id="HistoryPageTableTime" prefWidth="79.0" text="TIME" />
-                        <TableColumn fx:id="HistoryPageTableSituation" prefWidth="93.0" text="SITUATION" />
-                        <TableColumn fx:id="HistoryPageTableCurrency" prefWidth="90.0" text="CURRENCY" />
-                        <TableColumn fx:id="HistoryPageTableAmount" prefWidth="60.0" text="AMOUNT" />
+                        <TableColumn fx:id="HistoryPageTableDestUser" prefWidth="116.0" text="DEST USER" />
+                      <TableColumn fx:id="HistoryPageTableDate" prefWidth="84.0" text="DATE" />
+                        <TableColumn fx:id="HistoryPageTableTime" prefWidth="77.0" text="TIME" />
+                        <TableColumn fx:id="HistoryPageTableSituation" prefWidth="79.0" text="SITUATION" />
+                        <TableColumn fx:id="HistoryPageTableFromCurrency" prefWidth="141.0" text="ORIGIN CURRENCY" />
+                        <TableColumn fx:id="HistoryPageTableToCurrency" prefWidth="137.0" text="PURPOSE CURRENCY" />
+                        <TableColumn fx:id="HistoryPageTableAmount" minWidth="1.0" prefWidth="110.0" text="AMOUNT" />
                     </columns>
                   </TableView>
+                  <Button fx:id="WalletPageExit1" layoutX="409.0" layoutY="598.0" mnemonicParsing="false" onAction="#switchForm" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="EXIT" />
                </children>
             </AnchorPane>
          </children></AnchorPane>
@@ -137,7 +140,7 @@
             <Label fx:id="timeLabel" layoutX="123.0" layoutY="12.0" prefHeight="18.0" prefWidth="61.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="HomePageAnchor" layoutX="186.0" layoutY="40.0" prefHeight="700.0" prefWidth="869.0">
+      <AnchorPane fx:id="HomePageAnchor" layoutX="186.0" layoutY="40.0" prefHeight="700.0" prefWidth="869.0" visible="false">
          <children>
             <TableView fx:id="CoinInfoTable" editable="true" layoutX="167.0" layoutY="205.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="291.0" prefWidth="535.0">
               <columns>

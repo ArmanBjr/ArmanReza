@@ -2,6 +2,7 @@ package com.example.demo1;
 
 import com.example.demo1.Coins.CoinInfo;
 import com.example.demo1.CurrencyManagement.CurrencyData;
+import com.example.demo1.CurrencyManagement.Order;
 import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
 import com.example.demo1.Utilities.FixedSizeList;
@@ -43,28 +44,38 @@ import java.util.*;
 
 public class HomePageController implements Initializable {
     public User user;
-    @FXML
-    private TableView<?> HistoryPageTable;
 
     @FXML
-    private TableColumn<?, ?> HistoryPageTableAmount;
+    private TableView<Order> HistoryPageTable;
 
     @FXML
-    private TableColumn<?, ?> HistoryPageTableCurrency;
+    private TableColumn<Order, Integer> HistoryPageTableID;
 
     @FXML
-    private TableColumn<?, ?> HistoryPageTableDate;
+    private TableColumn<Order, String> HistoryPageTableFromCurrency;
 
     @FXML
-    private TableColumn<?, ?> HistoryPageTableID;
+    private TableColumn<Order, Double> HistoryPageTableAmount;
 
     @FXML
-    private TableColumn<?, ?> HistoryPageTableSituation;
+    private TableColumn<Order, String> HistoryPageTableDate;
 
     @FXML
-    private TableColumn<?, ?> HistoryPageTableTime;
+    private TableColumn<Order, String> HistoryPageTableTime;
+
+    @FXML
+    private TableColumn<Order, String> HistoryPageTableSituation;
+    @FXML
+    private TableColumn<Order, String> HistoryPageTableToCurrency;
+
+    @FXML
+    private TableColumn<Order, String> HistoryPageTableDestUser;
+
+
     @FXML
     private Button WalletPageExit;
+    @FXML
+    private Button WalletPageExit1;
 
     @FXML
     private Label CurrentProperty;
@@ -199,6 +210,27 @@ public class HomePageController implements Initializable {
     private AnchorPane HomePageProfileEdit;
     @FXML
     private ImageView EditImage;
+
+    public void displayHistoryTable() {
+        List<Order> orders = Order.getOrdersByUsername(GetUser.username);
+        ObservableList<Order> ordersList = FXCollections.observableArrayList();
+
+        if (orders != null) {
+            ordersList.addAll(orders);
+        }
+
+        HistoryPageTableID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        HistoryPageTableFromCurrency.setCellValueFactory(new PropertyValueFactory<>("OrgCurrency"));
+        HistoryPageTableToCurrency.setCellValueFactory(new PropertyValueFactory<>("DstCurrency"));
+        HistoryPageTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        HistoryPageTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        HistoryPageTableTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        HistoryPageTableSituation.setCellValueFactory(new PropertyValueFactory<>("situation"));
+        HistoryPageTableDestUser.setCellValueFactory(new PropertyValueFactory<>("DestUsername"));
+
+        HistoryPageTable.setItems(ordersList);
+    }
+
     private double getUserProperty(String currency) {
         switch (currency.toLowerCase()) {
             case "euro":
@@ -351,6 +383,12 @@ public class HomePageController implements Initializable {
             ProfilePage.setVisible(true);
             ProfileAnchor.setVisible(true);
             HomePageAnchor.setVisible(false);
+        } else if (e.getSource() == WalletPageExit1) {
+            HistoryPage.setVisible(false);
+            WalletAnchor.setVisible(false);
+            ProfilePage.setVisible(true);
+            ProfileAnchor.setVisible(true);
+            HomePageAnchor.setVisible(false);
         }
     }
 
@@ -421,12 +459,19 @@ public class HomePageController implements Initializable {
         FirstCurrecnyTableUserProperty.setCellValueFactory(new PropertyValueFactory<>("userProperty"));
 
         displayWalletValues();
+        displayHistoryTable();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> displayWalletValues());
             }
-        }, 0, 60000); // آ
+        }, 0, 60000);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> displayHistoryTable());
+            }
+        }, 0, 60000);
     }
     private double getChangePercentage(Connection connection, String column, String date, String time) throws SQLException {
         String query = "SELECT " + column + " FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 2";
