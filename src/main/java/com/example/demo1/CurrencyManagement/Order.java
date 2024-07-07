@@ -1,12 +1,25 @@
 package com.example.demo1.CurrencyManagement;
 
 import com.example.demo1.DataBase;
+import com.example.demo1.User.GetUser;
+import com.example.demo1.Utilities.Values;
+import javafx.scene.control.Alert;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 public class Order {
     private String username;
     private String DestUsername;
@@ -17,7 +30,7 @@ public class Order {
     private String OrgCurrency;
     private String DstCurrency;
     private double amount;
-
+    private int OrderId;
     public Order(String user, String destUsername, int id, String date, String time, String situation, String OrgCurrency,
                  String DstCurrency, double amount) {
         setUsername(user);
@@ -30,7 +43,23 @@ public class Order {
         setDstCurrency(DstCurrency);
         setOrgCurrency(OrgCurrency);
     }
+    public Order(String user, String destUsername, String date, String time, String situation, String OrgCurrency,
+                 String DstCurrency, double amount) {
+        setUsername(user);
+        setDestUsername(destUsername);
+        setAmount(amount);
+        setDate(date);
+        setTime(time);
+        setSituation(situation);
+        setDstCurrency(DstCurrency);
+        setOrgCurrency(OrgCurrency);
+        this.OrderId = Values.getOrderID();
+        System.out.println(this.OrderId);
+        Values.incrementOrderID();
+    }
+    public Order() {
 
+    }
     public void setUsername(String username) {
         this.username = username;
     }
@@ -51,10 +80,10 @@ public class Order {
         return this.date;
     }
     public void setId(int id) {
-        this.id = id;
+        this.OrderId = id;
     }
     public int getId() {
-        return this.id;
+        return this.OrderId;
     }
     public void setSituation(String situation) {
         this.situation = situation;
@@ -149,4 +178,139 @@ public class Order {
         return orders;
     }
 
+    public static List<Order> getPendingOrdersByCurrency(String currency) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM orders WHERE (OrgCurrency = ? OR DstCurrency = ?) AND situation = 'pending'";
+
+        try (Connection connection = DataBase.connectDb();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, currency);
+            statement.setString(2, currency);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setUsername(resultSet.getString("username"));
+                order.setDestUsername(resultSet.getString("DestUsername"));
+                order.setId(resultSet.getInt("id"));
+                order.setDate(resultSet.getString("date"));
+                order.setTime(resultSet.getString("time"));
+                order.setSituation(resultSet.getString("situation"));
+                order.setOrgCurrency(resultSet.getString("OrgCurrency"));
+                order.setDstCurrency(resultSet.getString("DstCurrency"));
+                order.setAmount(resultSet.getDouble("amount"));
+
+                orders.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+    public double getTotalAmountByCurrency(String currency) {
+        double totalAmount = 0;
+        String query = "SELECT SUM(amount) AS total_amount FROM orders WHERE OrgCurrency = ? OR DstCurrency = ?";
+
+        try (Connection connection = DataBase.connectDb();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, currency);
+            statement.setString(2, currency);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                totalAmount = resultSet.getDouble("total_amount");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return totalAmount;
+    }
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM orders";
+        try (Connection connection = DataBase.connectDb();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setUsername(resultSet.getString("username"));
+                order.setDestUsername(resultSet.getString("DestUsername"));
+                order.setId(resultSet.getInt("id"));
+                order.setDate(resultSet.getString("date"));
+                order.setTime(resultSet.getString("time"));
+                order.setSituation(resultSet.getString("situation"));
+                order.setOrgCurrency(resultSet.getString("OrgCurrency"));
+                order.setDstCurrency(resultSet.getString("DstCurrency"));
+                order.setAmount(resultSet.getDouble("amount"));
+                orders.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+    public static void exportOrdersToExcel() {
+        List<Order> orders = Order.getOrdersByUsername(GetUser.username);
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Orders");
+
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Username", "DestUsername", "ID", "Date", "Time", "Situation", "OrgCurrency", "DstCurrency", "Amount"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        int rowNum = 1;
+        for (Order order : orders) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(order.getUsername());
+            row.createCell(1).setCellValue(order.getDestUsername());
+            row.createCell(2).setCellValue(order.getId());
+            row.createCell(3).setCellValue(order.getDate());
+            row.createCell(4).setCellValue(order.getTime());
+            row.createCell(5).setCellValue(order.getSituation());
+            row.createCell(6).setCellValue(order.getOrgCurrency());
+            row.createCell(7).setCellValue(order.getDstCurrency());
+            row.createCell(8).setCellValue(order.getAmount());
+        }
+        String path = "D:\\university\\AP codes\\testing\\demo1\\exported files\\Orders";
+        path += GetUser.username + ".xlsx";
+        try (FileOutputStream fileOut = new FileOutputStream(path)) {
+            workbook.write(fileOut);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Export Successful");
+            alert.setHeaderText(null);
+            alert.setContentText("Orders have been exported to: " + path);
+            alert.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void addOrder(Order order) {
+        String query = "INSERT INTO orders (username, DstUser, id, date, time, situation, OriginCurrency, PurposeCurrency, amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DataBase.connectDb();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, order.getUsername());
+            pstmt.setString(2, order.getDestUsername());
+            pstmt.setInt(3, order.getId());
+            pstmt.setString(4, order.getDate());
+            pstmt.setString(5, order.getTime());
+            pstmt.setString(6, order.getSituation());
+            pstmt.setString(7, order.getOrgCurrency());
+            pstmt.setString(8, order.getDstCurrency());
+            pstmt.setDouble(9, order.getAmount());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

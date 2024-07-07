@@ -9,6 +9,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
+    public boolean isCapable;
+    public void setCapable(String sit) {
+        if (sit.equals("true")) isCapable = true;
+        else isCapable = false;
+    }
     private static final int PORT = 12345;
     private static ExecutorService pool = Executors.newFixedThreadPool(10);
     private static List<Thread> clientThreads = new ArrayList<>();

@@ -102,13 +102,11 @@ public class SignController {
         try{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             prepare = connect.prepareStatement(sql);
-            UserDAO.getAllUsers();
-            for (User user: UserDAO.users) {
-                if (user.getUsername().equals(SignInUsernameText.getText())) {
-                    alert.setContentText("User Already exists!");
-                    alert.showAndWait();
-                }
-            }
+            if (!UserDAO.isUsernameAvailable(SignInUsernameText.getText())) {
+                Alert newAlert = new Alert(Alert.AlertType.ERROR);
+                newAlert.setContentText("repetitive username!");
+                newAlert.showAndWait();
+            };
             prepare.setString(1, SignUpEmailText.getText());
             prepare.setString(2, SignUpUsernameText.getText());
             prepare.setString(3, SignUpPasswordText.getText());
@@ -212,12 +210,11 @@ public class SignController {
                             alert.setContentText("successfully Login!");
                             alert.showAndWait();
                             UserDAO.loadUsersFromDatabase();
-                            User user = UserDAO.userFinder1(SignInUsernameText.getText(), SignInPasswordText.getText());
+                            User user = UserDAO.userFinder1(SignInUsernameText.getText());
                             GetUser.username = SignInUsernameText.getText();
+                            user.wallet = Wallet.findUser(GetUser.username);
                             GetUser.user = user;
-                            Wallet.findUser(GetUser.username);
-                            System.out.println("getuser user is " + GetUser.user);
-                            System.out.println(GetUser.user.wallet);
+                            System.out.println(GetUser.user.wallet.CurrentEuro);
                             SignInsigningbutton.getScene().getWindow().hide();
                             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                             Stage stage = new Stage();

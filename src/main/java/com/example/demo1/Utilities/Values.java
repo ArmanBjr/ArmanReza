@@ -2,6 +2,7 @@ package com.example.demo1.Utilities;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -57,6 +58,37 @@ public class Values {
 
         return id;
     }
+    public static int getOrderID() {
+        String query = "SELECT orderID FROM id";
+        int id = -1;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                id = rs.getInt("orderID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+    public static void incrementOrderID() {
+        int currentID = getOrderID();
+        int newID = currentID + 1;
+
+        String updateQuery = "UPDATE id SET orderID = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+             PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+
+            pstmt.setInt(1, newID);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public static void incrementID() {
         int currentID = getID();
         int newID = currentID + 1;
@@ -93,5 +125,15 @@ public class Values {
             e.printStackTrace();
         }
         return 0.0;
+    }
+    public static String getCurrentTime() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return now.format(timeFormatter);
+    }
+    public static String getCurrentDate() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return today.format(dateFormatter);
     }
 }

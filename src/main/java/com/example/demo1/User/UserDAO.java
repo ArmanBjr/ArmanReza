@@ -1,5 +1,6 @@
 package com.example.demo1.User;
 
+import com.example.demo1.CurrencyManagement.Wallet;
 import com.example.demo1.DataBase;
 
 import java.sql.*;
@@ -30,6 +31,9 @@ public class UserDAO {
         }
     }
     public static void loadUsersFromDatabase() {
+        if (users.size() != 0) {
+            users.clear();
+        }
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -47,8 +51,8 @@ public class UserDAO {
                 String email = rs.getString("email");
                 String phoneNumber = rs.getString("phoneNumber");
                 String image = rs.getString("image");
-                System.out.println("Fetched User: " + username + ", " + firstName + ", " + lastName + ", " + passwordDb + ", " + email + ", " + phoneNumber + ", " + image);
                 User userObj = new User(username, email, passwordDb, firstName, lastName, phoneNumber, image);
+                userObj.wallet = Wallet.findUser(username);
                 users.add(userObj);
             }
         } catch (SQLException e) {
@@ -78,7 +82,7 @@ public class UserDAO {
             return null;
         }
     }
-    public static User userFinder1(String username, String password) {
+    public static User userFinder1(String username) {
         for (User user: users) {
             if (user.getUsername().equals(username)) {
                 return user;
@@ -104,5 +108,27 @@ public class UserDAO {
                 System.out.println(user.toString());
             }
         }
+    }
+    public static boolean isUsernameAvailable(String username) {
+
+        String sql = "SELECT COUNT(*) FROM info WHERE username = ?";
+
+        try (Connection conn = DataBase.connectDb();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    return count == 0;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false; // در صورت بروز خطا یا مشکل در اتصال به پایگاه داده
     }
 }

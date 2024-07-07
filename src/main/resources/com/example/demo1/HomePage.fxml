@@ -6,10 +6,13 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="1048.0" styleClass="top-form" stylesheets="@beautiHomePage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.HomePageController">
    <children>
@@ -63,7 +66,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="WalletAnchor" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="WalletAnchor" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="380.0" layoutY="14.0" style="-fx-border-radius: 20px; -fx-border-color: #449e5e;" text="WALLET" textFill="#0a0000">
                      <font>
@@ -75,7 +78,7 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label fx:id="CurrentProperty" layoutX="429.0" layoutY="104.0" prefHeight="18.0" prefWidth="33.0" />
+                  <Label fx:id="CurrentProperty" alignment="CENTER" contentDisplay="CENTER" layoutX="353.0" layoutY="104.0" prefHeight="18.0" prefWidth="175.0" />
                   <TableView fx:id="FirstCurrecnyTable" layoutX="317.0" layoutY="141.0" prefHeight="235.0" prefWidth="256.0">
                     <columns>
                       <TableColumn fx:id="FirstCurrecnyTableCurrency" prefWidth="75.0" text="Currency" />
@@ -86,7 +89,7 @@
                   <Button fx:id="WalletPageExit" layoutX="418.0" layoutY="630.0" mnemonicParsing="false" onAction="#switchForm" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="EXIT" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="HistoryPage" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="HistoryPage" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="329.0" layoutY="58.0" style="-fx-background-color: linear-gradient(to top right, #9ced8c, #7bed64); -fx-border-radius: 20px; -fx-border-color: #2bf202;" text="History Page">
                      <font>
@@ -105,10 +108,100 @@
                         <TableColumn fx:id="HistoryPageTableAmount" minWidth="1.0" prefWidth="110.0" text="AMOUNT" />
                     </columns>
                   </TableView>
-                  <Button fx:id="WalletPageExit1" layoutX="409.0" layoutY="598.0" mnemonicParsing="false" onAction="#switchForm" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="EXIT" />
+                  <Button fx:id="WalletPageExit1" layoutX="410.0" layoutY="650.0" mnemonicParsing="false" onAction="#switchForm" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="EXIT" />
+                  <Button fx:id="Export" layoutX="380.0" layoutY="581.0" mnemonicParsing="false" onAction="#ExportClickedBuuton" prefHeight="31.0" prefWidth="115.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Export" />
                </children>
             </AnchorPane>
-         </children></AnchorPane>
+            <AnchorPane fx:id="TransferPage" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="316.0" layoutY="49.0" style="-fx-border-color: #4fff90;" text="Transfer Page">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <MenuButton fx:id="TransferPageMenuButton" disable="true" layoutX="663.0" layoutY="351.0" mnemonicParsing="false" popupSide="TOP" text="MenuButton">
+                     <items>
+                        <MenuItem fx:id="TransferEuro" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="Euro" />
+                        <MenuItem fx:id="TransferUsd" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="Usd" />
+                        <MenuItem fx:id="TransferToman" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="Toman" />
+                        <MenuItem fx:id="TransferGbp" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="GBP" />
+                        <MenuItem fx:id="TransferYen" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="Yen" />
+                     </items>
+                  </MenuButton>
+                  <Label layoutX="56.0" layoutY="350.0" text="AMOUNT OF PROPERTY">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="467.0" layoutY="350.0" text="PURPOSE CURRENCY">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="TransferAmount" disable="true" layoutX="273.0" layoutY="350.0" promptText="AMOUNT" styleClass="textfield" stylesheets="@Beauty.css" />
+                  <Label fx:id="AmountOfPurposeCurrency" layoutX="666.0" layoutY="377.0" text="purpose currency" />
+                  <Label layoutX="273.0" layoutY="169.0" text="WALLET ID">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="TransferWalletId" layoutX="441.0" layoutY="170.0" onInputMethodTextChanged="#CheckVerificationOfCircle" promptText="WALLET ID" />
+                  <Circle fx:id="TransferCircle" fill="WHITE" layoutX="573.0" layoutY="183.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Button fx:id="TransferTransferButton" layoutX="353.0" layoutY="551.0" mnemonicParsing="false" onAction="#OnTransferButtonClicked" prefHeight="45.0" prefWidth="177.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Transfer" />
+                  <AnchorPane layoutX="278.0" layoutY="219.0" prefHeight="55.0" prefWidth="305.0" style="-fx-border-color: #528560; -fx-border-radius: 20px;">
+                     <children>
+                        <Label layoutX="14.0" layoutY="11.0" text="Username:">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="TransferPageUsername" layoutX="139.0" layoutY="20.0" prefHeight="18.0" prefWidth="163.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="SwapPage" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="343.0" layoutY="69.0" style="-fx-border-color: #4fff90;" text="Swap Page">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="SwapPageOriginAmount" layoutX="498.0" layoutY="246.0" promptText="amount" />
+                  <Label layoutX="294.0" layoutY="241.0" text="From">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="308.0" layoutY="346.0" text="To">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <MenuButton fx:id="SwapPageMenuButton" layoutX="369.0" layoutY="246.0" mnemonicParsing="false" popupSide="TOP" text="MenuButton">
+                     <items>
+                        <MenuItem fx:id="SwapPageEuro" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="Euro" />
+                        <MenuItem fx:id="SwapPageUsd" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="Usd" />
+                        <MenuItem fx:id="SwapPageToman" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="Toman" />
+                        <MenuItem fx:id="SwapPageGbp" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="GBP" />
+                        <MenuItem fx:id="SwapPageYen" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="Yen" />
+                     </items>
+                  </MenuButton>
+                  <MenuButton fx:id="SwapPageMenuButton1" layoutX="369.0" layoutY="349.0" mnemonicParsing="false" text="MenuButton">
+                     <items>
+                        <MenuItem fx:id="SwapPageEuro1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="Euro" />
+                        <MenuItem fx:id="SwapPageUsd1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="Usd" />
+                        <MenuItem fx:id="SwapPageToman1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="Toman" />
+                        <MenuItem fx:id="SwapPageGbp1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="GBP" />
+                        <MenuItem fx:id="SwapPageYen1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="Yen" />
+                     </items>
+                  </MenuButton>
+                  <Button fx:id="SwapPageSwap" layoutX="369.0" layoutY="477.0" mnemonicParsing="false" onAction="#onSwapClicked" prefHeight="45.0" prefWidth="130.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Swap" />
+                  <Text fx:id="SwapPagePurAmount" layoutX="502.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="143.9830722808838" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
       <AnchorPane layoutY="40.0" prefHeight="700.0" prefWidth="186.0" styleClass="nav-form" stylesheets="@beautiHomePage.css">
          <children>
             <ImageView fx:id="ProfileImage" fitHeight="150.0" fitWidth="200.0" layoutX="18.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
@@ -129,7 +222,7 @@
             <Button fx:id="HomePage" layoutX="18.0" layoutY="273.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="HomePage" />
             <Button fx:id="Exchange" layoutX="18.0" layoutY="303.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Exchange" />
             <Button fx:id="Profile" layoutX="19.0" layoutY="370.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Profile" />
-            <Button fx:id="Swap" layoutX="18.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Swap" />
+            <Button fx:id="swap" layoutX="18.0" layoutY="335.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Swap" />
             <Button fx:id="Transfer" layoutX="18.0" layoutY="405.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="150.0" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="Transfer" />
             <Button fx:id="SignOut" layoutX="14.0" layoutY="656.0" mnemonicParsing="false" onAction="#OnSignOutButtonClicked" styleClass="nav-btn" stylesheets="@beautiHomePage.css" text="SIGN OUT" />
          </children>

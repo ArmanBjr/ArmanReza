@@ -34,13 +34,13 @@ public class Wallet {
     }
     public Wallet(int id, double euro, double usd, double gbp, double toman, double yen) {
         this.thisUserId = id;
-        this.CurrentYen = euro;
+        this.CurrentEuro = euro;
         this.CurrentUsd = usd;
         this.CurentGbp = gbp;
         this.CurrentToman = toman;
         this.CurrentYen = yen;
     }
-    public void setCurrentProperty() {
+    public double setCurrentProperty() {
         double result = 0;
         result += CurrentToman / CurrencyGetter("toman");
         result += CurrentYen / CurrencyGetter("yen");
@@ -48,6 +48,7 @@ public class Wallet {
         result += CurrentEuro / CurrencyGetter("euro");
         result += CurentGbp / CurrencyGetter("GBp");
         this.currentProperty = result;
+        return currentProperty;
     }
     public double CurrencyGetter(String name) {
         try (Connection connection = DataBase.connectDb()) {
@@ -55,8 +56,6 @@ public class Wallet {
             LocalTime currentTime = LocalTime.now();
             String formattedDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
-            // Query to get the latest values up to current date and time
             String query = "SELECT euro, usd, GBP, toman, yen FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 1";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, formattedDate + " " + formattedTime);
@@ -94,7 +93,7 @@ public class Wallet {
         }
     }
 
-    public void addCash(String username, Double euro, Double usd, Double gpb, Double toman, Double yen) {
+    public static void addCash(String username, Double euro, Double usd, Double gpb, Double toman, Double yen) {
         String selectQuery = "SELECT euro_currency, usd_currency, GBP_currency, toman_currency, yen_currency FROM wallet WHERE username = ?";
         String updateQuery = "UPDATE wallet SET euro_currency = ?, usd_currency = ?, GBP_currency = ?, toman_currency = ?, yen_currency = ? WHERE username = ?";
 
@@ -132,7 +131,8 @@ public class Wallet {
             e.printStackTrace();
         }
     }
-    public static void findUser(String username) {
+    public static Wallet findUser(String username) {
+        Wallet wallet = null;
         String query = "SELECT id, euro_currency, usd_currency, GBP_currency, toman_currency, yen_currency FROM wallet WHERE username = ?";
 
         try (Connection conn = DataBase.connectDb();
@@ -148,18 +148,14 @@ public class Wallet {
                 double gbp = rs.getDouble("GBP_currency");
                 double toman = rs.getDouble("toman_currency");
                 double yen = rs.getDouble("yen_currency");
-                Wallet wallet = new Wallet(id, euro, usd, gbp, toman, yen);
-                for (User user : UserDAO.users) {
-                    if (user.getUsername().equals(username)) {
-                        user.setWallet(wallet);
-                        break;
-                    }
-                }
+                wallet = new Wallet(id, euro, usd, gbp, toman, yen);
+                return wallet;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return wallet;
     }
 
     @Override
@@ -167,5 +163,44 @@ public class Wallet {
         return String.valueOf(CurrentEuro) + " " + String.valueOf(CurrentUsd) + " " + String.valueOf(CurentGbp) +
                 " " + String.valueOf(CurrentToman) +
                 " " + String.valueOf(CurrentYen) +  " and id is " + String.valueOf(thisUserId);
+    }
+    public static boolean WalletIdChecker(int id) {
+        String query = "SELECT COUNT(*) FROM wallet WHERE id = ?";
+
+        try (Connection connection = DataBase.connectDb();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                return count > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static String findUsernameById(int id) {
+        String username = null;
+        String FIND_USERNAME_BY_ID_QUERY = "SELECT username FROM wallet WHERE id = ?";
+        try (Connection connection = DataBase.connectDb();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_USERNAME_BY_ID_QUERY)) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                username = resultSet.getString("username");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return username;
     }
 }
