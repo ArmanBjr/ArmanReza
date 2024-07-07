@@ -55,6 +55,11 @@ import java.util.*;
 
 public class HomePageController implements Initializable {
     @FXML
+    private Label ExchangePageLabel;
+
+    @FXML
+    private Label ExchangePageLabel1;
+    @FXML
     private Button swap;
 
     @FXML
@@ -308,7 +313,104 @@ public class HomePageController implements Initializable {
 
     @FXML
     private MenuItem TransferEuro;
+
+    @FXML
+    private MenuItem ExchangeBuyChoose;
+
+    @FXML
+    private AnchorPane ExchangeAnchor;
+
+    @FXML
+    private TextField ExchangePageAmount;
+
+    @FXML
+    private MenuButton ExchangePageCurrency;
+
+    @FXML
+    private MenuItem ExchangePageEuroSelected;
+
+    @FXML
+    private MenuItem ExchangePageGbpSelected;
+
+    @FXML
+    private TextField ExchangePagePrice;
+
+    @FXML
+    private Button ExchangePageRecord;
+
+    @FXML
+    private MenuItem ExchangePageTomanSelected;
+
+    @FXML
+    private MenuItem ExchangePageUsdSelected;
+
+    @FXML
+    private MenuItem ExchangePageYenSelected;
+
+    @FXML
+    private MenuItem ExchangeSellChoose;
+
+    @FXML
+    private AnchorPane ExchangeTableBuyOrSell;
+    @FXML
+    private TableView<Order> ExchangeTable;
+
+    @FXML
+    private TableColumn<Order, Double> ExchangeTableAmount;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTableButOrSell;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTableDate;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTableDestUser;
+
+    @FXML
+    private TableColumn<Order, Integer> ExchangeTableId;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTableOrgUser;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTablePrgCurrency;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTableSituation;
+
+    @FXML
+    private TableColumn<Order, String> ExchangeTableTime;
+    @FXML
+    private TableColumn<Order, String> ExchangeTableDestCurrency;
+    @FXML
+    private MenuButton BuyOrSellBuuton;
+
+
+    public String getSelectedCurrency() {
+        return ExchangePageCurrency.getText();
+    }
+    public void displayExchangeTable() {
+        String selectedCurrency = getSelectedCurrency();
+        if (selectedCurrency == null) {
+            return;
+        }
+        List<Order> orders = Order.getOrdersByCurrency(selectedCurrency);
+        ExchangeTableId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        ExchangeTableAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        ExchangeTableDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        ExchangeTableTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        ExchangeTableSituation.setCellValueFactory(new PropertyValueFactory<>("situation"));
+        ExchangeTableOrgUser.setCellValueFactory(new PropertyValueFactory<>("username"));
+        ExchangeTableDestUser.setCellValueFactory(new PropertyValueFactory<>("DestUsername"));
+        ExchangeTablePrgCurrency.setCellValueFactory(new PropertyValueFactory<>("OrgCurrency"));
+        ExchangeTableDestCurrency.setCellValueFactory(new PropertyValueFactory<>("DstCurrency"));
+
+        ExchangeTable.setItems(FXCollections.observableArrayList(orders));
+    }
+
     private boolean isValid;
+
     private void checkAndUpdateAmount() {
         String currency = SwapPageMenuButton.getText();
         String currency1 = SwapPageMenuButton1.getText();
@@ -342,7 +444,37 @@ public class HomePageController implements Initializable {
             SwapPagePurAmount.setText("invalidInput");
         }
     }
+    public int compareValueWithCurrency(double value, String currency) {
+        double currentPrice = Values.Value(currency);
+        if (value > currentPrice) {
+            return 1;
+        } else if (value == currentPrice) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 
+    public void onMenuButtonExchangePageBuyOrSellClicked(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == ExchangeSellChoose) {
+            BuyOrSellBuuton.setText("Sell");
+        } else if (actionEvent.getSource() == ExchangeBuyChoose) {
+            BuyOrSellBuuton.setText("Buy");
+        }
+    }
+    public void onMenubuttonExchangePageClicked(ActionEvent e) {
+        if (e.getSource() == ExchangePageEuroSelected) {
+            ExchangePageCurrency.setText("Euro");
+        } else if (e.getSource() == ExchangePageTomanSelected) {
+            ExchangePageCurrency.setText("Toman");
+        } else if (e.getSource() == ExchangePageYenSelected) {
+            ExchangePageCurrency.setText("Yen");
+        } else if (e.getSource() == ExchangePageGbpSelected) {
+            ExchangePageCurrency.setText("GBP");
+        } else if (e.getSource() == ExchangePageUsdSelected) {
+            ExchangePageCurrency.setText("Usd");
+        }
+    }
     private double getUserBalance(String username, String currency) {
         double balance = 0.0;
         String query = "SELECT " + currency + "_currency FROM wallet WHERE username = ?";
@@ -728,6 +860,7 @@ public class HomePageController implements Initializable {
             WalletAnchor.setVisible(false);
             TransferPage.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if (e.getSource() == HomePage) {
             HistoryPage.setVisible(true);
             ProfilePage.setVisible(false);
@@ -736,6 +869,7 @@ public class HomePageController implements Initializable {
             HomePageAnchor.setVisible(true);
             TransferPage.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if(e.getSource() == Wallet) {
             HistoryPage.setVisible(false);
             WalletAnchor.setVisible(true);
@@ -744,6 +878,7 @@ public class HomePageController implements Initializable {
             HomePageAnchor.setVisible(false);
             TransferPage.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if (e.getSource() == History) {
             HistoryPage.setVisible(true);
             WalletAnchor.setVisible(false);
@@ -752,6 +887,7 @@ public class HomePageController implements Initializable {
             HomePageAnchor.setVisible(false);
             TransferPage.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if (e.getSource() == WalletPageExit) {
             HistoryPage.setVisible(false);
             WalletAnchor.setVisible(false);
@@ -760,6 +896,7 @@ public class HomePageController implements Initializable {
             HomePageAnchor.setVisible(false);
             TransferPage.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if (e.getSource() == WalletPageExit1) {
             HistoryPage.setVisible(false);
             WalletAnchor.setVisible(false);
@@ -768,6 +905,7 @@ public class HomePageController implements Initializable {
             HomePageAnchor.setVisible(false);
             TransferPage.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if(e.getSource() == Transfer) {
             TransferPage.setVisible(true);
             HistoryPage.setVisible(false);
@@ -776,6 +914,7 @@ public class HomePageController implements Initializable {
             ProfileAnchor.setVisible(true);
             HomePageAnchor.setVisible(false);
             SwapPage.setVisible(false);
+            ExchangeAnchor.setVisible(false);
         } else if (e.getSource() == swap) {
             TransferPage.setVisible(false);
             HistoryPage.setVisible(false);
@@ -784,6 +923,16 @@ public class HomePageController implements Initializable {
             ProfileAnchor.setVisible(true);
             HomePageAnchor.setVisible(false);
             SwapPage.setVisible(true);
+            ExchangeAnchor.setVisible(false);
+        } else if (e.getSource() == Exchange) {
+            ExchangeAnchor.setVisible(true);
+            TransferPage.setVisible(false);
+            HistoryPage.setVisible(false);
+            WalletAnchor.setVisible(false);
+            ProfilePage.setVisible(false);
+            ProfileAnchor.setVisible(true);
+            HomePageAnchor.setVisible(false);
+            SwapPage.setVisible(false);
         }
     }
 
@@ -862,8 +1011,73 @@ public class HomePageController implements Initializable {
     private String password = "";
     private ObservableList<CoinInfo> coinData = FXCollections.observableArrayList();
     private boolean check = false;
+    private boolean isOrderCapapble1 = false, isOrderCapapble2 = false;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ExchangePageAmount.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (BuyOrSellBuuton.getText().equals("Buy")) {
+                try {
+                    Double.parseDouble(newValue);
+                    ExchangePageLabel.setText("Valid input");
+                    ExchangePageLabel.setTextFill(Color.GREEN);
+                    isOrderCapapble1 = true;
+                } catch (NumberFormatException e) {
+                    ExchangePageLabel.setText("Invalid input");
+                    ExchangePageLabel.setTextFill(Color.RED);
+                    isOrderCapapble1 = false;
+                }
+            } else {
+                try {
+                    double amount = Double.parseDouble(newValue);
+                    boolean result = com.example.demo1.CurrencyManagement.Wallet.checkCurrencyAmount(amount, GetUser.username, ExchangePageCurrency.getText());
+                    if (result) {
+                        ExchangePageLabel.setText("Capable Price");
+                        ExchangePageLabel.setTextFill(Color.GREEN);
+                        isOrderCapapble1 = true;
+                    } else {
+                        ExchangePageLabel.setText("Not enough amount of money");
+                        ExchangePageLabel.setTextFill(Color.RED);
+                        isOrderCapapble1 = false;
+                    }
+                } catch (NumberFormatException e) {
+                    ExchangePageLabel.setText("Invalid input");
+                    ExchangePageLabel.setTextFill(Color.RED);
+                    isOrderCapapble1 = false;
+                }
+            }
+        });
+        ExchangePagePrice.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                double price = Double.parseDouble(newValue);
+                int result = compareValueWithCurrency(price, ExchangePageCurrency.getText());
+                if (BuyOrSellBuuton.getText().equals("Buy")) {
+                    if (result == 1) {
+                        ExchangePageLabel1.setText("More than the real value");
+                        ExchangePageLabel1.setTextFill(Color.RED);
+                    } else if (result == 0) {
+                        ExchangePageLabel1.setText("The real price");
+                        ExchangePageLabel1.setTextFill(Color.BLACK);
+                    } else if (result == -1) {
+                        ExchangePageLabel1.setText("Less than the real price");
+                        ExchangePageLabel1.setTextFill(Color.GREEN);
+                    }
+                } else {
+                    if (result == 1) {
+                        ExchangePageLabel1.setText("More than the real value");
+                        ExchangePageLabel1.setTextFill(Color.GREEN);
+                    } else if (result == 0) {
+                        ExchangePageLabel1.setText("The real price");
+                        ExchangePageLabel1.setTextFill(Color.BLACK);
+                    } else if (result == -1) {
+                        ExchangePageLabel1.setText("Less than the real price");
+                        ExchangePageLabel1.setTextFill(Color.RED);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                ExchangePageLabel1.setText("Invalid input");
+                ExchangePageLabel1.setTextFill(Color.RED);
+            }
+        });
         TransferAmount.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -923,6 +1137,13 @@ public class HomePageController implements Initializable {
                 Platform.runLater(() -> displayHistoryTable());
             }
         }, 0, 60000);
+        displayExchangeTable();
+        ExchangePageCurrency.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                displayExchangeTable();
+            }
+        });
     }
     private double getChangePercentage(Connection connection, String column, String date, String time) throws SQLException {
         String query = "SELECT " + column + " FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 2";

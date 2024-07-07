@@ -203,4 +203,44 @@ public class Wallet {
 
         return username;
     }
+    public static boolean checkCurrencyAmount(double amount, String username, String currency) {
+        String columnName;
+        switch (currency.toLowerCase()) {
+            case "euro":
+                columnName = "euro_currency";
+                break;
+            case "usd":
+                columnName = "usd_currency";
+                break;
+            case "yen":
+                columnName = "yen_currency";
+                break;
+            case "toman":
+                columnName = "toman_currency";
+                break;
+            case "gbp":
+                columnName = "GBP_currency";
+                break;
+            default:
+                return false;
+        }
+        String query = "SELECT " + columnName + " FROM wallet WHERE username = ?";
+
+        try (Connection conn = DataBase.connectDb();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                double userCurrencyAmount = rs.getDouble(columnName);
+                return amount < userCurrencyAmount;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

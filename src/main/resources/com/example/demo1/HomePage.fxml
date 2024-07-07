@@ -66,7 +66,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="WalletAnchor" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="WalletAnchor" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="380.0" layoutY="14.0" style="-fx-border-radius: 20px; -fx-border-color: #449e5e;" text="WALLET" textFill="#0a0000">
                      <font>
@@ -198,6 +198,57 @@
                   </MenuButton>
                   <Button fx:id="SwapPageSwap" layoutX="369.0" layoutY="477.0" mnemonicParsing="false" onAction="#onSwapClicked" prefHeight="45.0" prefWidth="130.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Swap" />
                   <Text fx:id="SwapPagePurAmount" layoutX="502.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="143.9830722808838" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="ExchangeAnchor" layoutX="70.0" layoutY="56.0" prefHeight="700.0" prefWidth="861.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="ExchangeTableBuyOrSell" layoutX="9.0" layoutY="11.0" prefHeight="685.0" prefWidth="244.0" styleClass="anchor-pane" stylesheets="@beautiHomePage.css">
+                     <children>
+                        <MenuButton fx:id="BuyOrSellBuuton" layoutX="93.0" layoutY="32.0" mnemonicParsing="false" popupSide="TOP" styleClass="edit-button" stylesheets="@Beauty.css" text="Buy">
+                          <items>
+                            <MenuItem fx:id="ExchangeSellChoose" mnemonicParsing="false" onAction="#onMenuButtonExchangePageBuyOrSellClicked" text="Sell" />
+                            <MenuItem fx:id="ExchangeBuyChoose" mnemonicParsing="false" onAction="#onMenuButtonExchangePageBuyOrSellClicked" text="Buy" />
+                          </items>
+                        </MenuButton>
+                        <MenuButton fx:id="ExchangePageCurrency" layoutX="71.0" layoutY="75.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="103.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Euro">
+                           <items>
+                              <MenuItem fx:id="ExchangePageEuroSelected" mnemonicParsing="false" onAction="#onMenubuttonExchangePageClicked" text="Euro" />
+                              <MenuItem fx:id="ExchangePageUsdSelected" mnemonicParsing="false" onAction="#onMenubuttonExchangePageClicked" text="Usd" />
+                              <MenuItem fx:id="ExchangePageTomanSelected" mnemonicParsing="false" onAction="#onMenubuttonExchangePageClicked" text="Toman" />
+                              <MenuItem fx:id="ExchangePageGbpSelected" mnemonicParsing="false" onAction="#onMenubuttonExchangePageClicked" text="GBP" />
+                              <MenuItem fx:id="ExchangePageYenSelected" mnemonicParsing="false" onAction="#onMenubuttonExchangePageClicked" text="Yen" />
+                           </items>
+                        </MenuButton>
+                        <Label layoutX="11.0" layoutY="143.0" text="AMOUNT:" />
+                        <TextField fx:id="ExchangePageAmount" layoutX="80.0" layoutY="139.0" promptText="Amount" />
+                        <Label layoutX="25.0" layoutY="188.0" text="Price" />
+                        <TextField fx:id="ExchangePagePrice" layoutX="80.0" layoutY="184.0" promptText="Price" />
+                        <Button fx:id="ExchangePageRecord" layoutX="41.0" layoutY="271.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="163.0" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="Record" />
+                        <Label fx:id="ExchangePageLabel" layoutX="80.0" layoutY="165.0" prefHeight="18.0" prefWidth="150.0">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="ExchangePageLabel1" layoutX="81.0" layoutY="210.0" prefHeight="18.0" prefWidth="150.0">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <TableView fx:id="ExchangeTable" layoutX="262.0" layoutY="11.0" prefHeight="685.0" prefWidth="589.0" styleClass="anchor-pane" stylesheets="@beautiHomePage.css">
+                    <columns>
+                      <TableColumn fx:id="ExchangeTableOrgUser" prefWidth="66.0" text="Org User" />
+                        <TableColumn fx:id="ExchangeTableDestUser" prefWidth="69.0" text="Dest User" />
+                      <TableColumn fx:id="ExchangeTableId" prefWidth="26.0" text="ID" />
+                        <TableColumn fx:id="ExchangeTableDate" prefWidth="57.0" text="Date" />
+                        <TableColumn fx:id="ExchangeTableTime" prefWidth="64.0" text="time" />
+                        <TableColumn fx:id="ExchangeTableSituation" prefWidth="64.0" text="Situation" />
+                        <TableColumn fx:id="ExchangeTablePrgCurrency" prefWidth="86.0" text="Org Currency" />
+                        <TableColumn fx:id="ExchangeTableDestCurrency" prefWidth="76.0" text="DstCurrency" />
+                        <TableColumn fx:id="ExchangeTableAmount" prefWidth="75.0" text="Amount" />
+                    </columns>
+                  </TableView>
                </children>
             </AnchorPane>
          </children>

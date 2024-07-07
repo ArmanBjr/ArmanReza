@@ -54,3 +54,6 @@
     -fx-border-radius: 10px;
     -fx-border-color: #449e5e;
 }
+.anchor-pane:hover {
+    -fx-background-color: linear-gradient(to top left, #ffffff, #c4ffc6);
+}

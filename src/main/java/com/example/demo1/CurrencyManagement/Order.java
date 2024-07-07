@@ -23,7 +23,6 @@ import java.util.Random;
 public class Order {
     private String username;
     private String DestUsername;
-    private int id;
     private String date;
     private String time;
     private String situation;
@@ -178,9 +177,9 @@ public class Order {
         return orders;
     }
 
-    public static List<Order> getPendingOrdersByCurrency(String currency) {
+    public static List<Order> getOrdersByCurrency(String currency) {
         List<Order> orders = new ArrayList<>();
-        String query = "SELECT * FROM orders WHERE (OrgCurrency = ? OR DstCurrency = ?) AND situation = 'pending'";
+        String query = "SELECT * FROM orders WHERE (OriginCurrency = ? OR PurposeCurrency = ?)";
 
         try (Connection connection = DataBase.connectDb();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -192,13 +191,13 @@ public class Order {
             while (resultSet.next()) {
                 Order order = new Order();
                 order.setUsername(resultSet.getString("username"));
-                order.setDestUsername(resultSet.getString("DestUsername"));
+                order.setDestUsername(resultSet.getString("DstUser"));
                 order.setId(resultSet.getInt("id"));
                 order.setDate(resultSet.getString("date"));
                 order.setTime(resultSet.getString("time"));
                 order.setSituation(resultSet.getString("situation"));
-                order.setOrgCurrency(resultSet.getString("OrgCurrency"));
-                order.setDstCurrency(resultSet.getString("DstCurrency"));
+                order.setOrgCurrency(resultSet.getString("OriginCurrency"));
+                order.setDstCurrency(resultSet.getString("PurposeCurrency"));
                 order.setAmount(resultSet.getDouble("amount"));
 
                 orders.add(order);
@@ -313,4 +312,40 @@ public class Order {
             e.printStackTrace();
         }
     }
+    public static boolean processOrder(Order inputOrder) {
+        if (!inputOrder.getOrgCurrency().equals(inputOrder.getDstCurrency())) {
+            return false;
+        }
+        String query = "SELECT * FROM orders WHERE situation = 'pending' AND OrgCurrency = ? AND DstCurrency = ? AND amount >= ?";
+
+        try (Connection conn = DataBase.connectDb();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, inputOrder.getOrgCurrency());
+            pstmt.setString(2, inputOrder.getDstCurrency());
+            pstmt.setDouble(3, inputOrder.getAmount());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String orderUsername = rs.getString("username");
+                if (!orderUsername.equals(inputOrder.getUsername())) {
+                    int orderId = rs.getInt("id");
+                    String updateQuery = "UPDATE orders SET situation = 'accepted', DestUsername = ? WHERE id = ?";
+                    try (PreparedStatement updatePstmt = conn.prepareStatement(updateQuery)) {
+                        updatePstmt.setString(1, GetUser.username);
+                        updatePstmt.setInt(2, orderId);
+                        updatePstmt.executeUpdate();
+                    }
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }
