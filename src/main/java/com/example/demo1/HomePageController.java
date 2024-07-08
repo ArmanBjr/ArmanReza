@@ -4,6 +4,8 @@ import com.example.demo1.Coins.CoinInfo;
 import com.example.demo1.CurrencyManagement.CurrencyData;
 import com.example.demo1.CurrencyManagement.Order;
 import com.example.demo1.CurrencyManagement.Wallet;
+import com.example.demo1.Server.Helper;
+import com.example.demo1.Server.Server;
 import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
 import com.example.demo1.User.UserDAO;
@@ -42,8 +44,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
@@ -386,6 +388,21 @@ public class HomePageController implements Initializable {
     private TableColumn<Order, String> ExchangeTableDestCurrency;
     @FXML
     private MenuButton BuyOrSellBuuton;
+
+    public String usernameGet = GetUser.username;
+    public static boolean checkConnection(String username) {
+        try (Socket socket = new Socket("localhost", 12345);
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            out.println("CHECK_CONNECTION");
+            out.println(username);
+            String response = in.readLine();
+            return "CONNECTED".equals(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
     public String getSelectedCurrency() {
@@ -1157,6 +1174,13 @@ public class HomePageController implements Initializable {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                Platform.runLater(() -> isDisplayOkSaidByReza());
+            }
+        }, 0, 60000);
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
                 Platform.runLater(() -> displayHistoryTable());
             }
         }, 0, 60000);
@@ -1167,6 +1191,33 @@ public class HomePageController implements Initializable {
                 displayExchangeTable();
             }
         });
+    }
+    public static boolean isUserOnline(String username) {
+        String querySQL = "SELECT COUNT(*) FROM online_users WHERE username = ?";
+        boolean isOnline = false;
+
+        try (Connection conn = DataBase.connectOnline();
+             PreparedStatement stmt = conn.prepareStatement(querySQL)) {
+
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    isOnline = rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return isOnline;
+    }
+    public void isDisplayOkSaidByReza() {
+        if (isUserOnline(GetUser.username)) {
+            System.out.println("online");
+        } else {
+            ExchangeAnchor.getScene().getWindow().hide();
+            System.out.println("offline");
+        }
     }
     private double getChangePercentage(Connection connection, String column, String date, String time) throws SQLException {
         String query = "SELECT " + column + " FROM currency_rates WHERE CONCAT(date, ' ', time) <= ? ORDER BY CONCAT(date, ' ', time) DESC LIMIT 2";

@@ -30,6 +30,27 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
+    public static List<User> getAllUsersAsAList() throws SQLException {
+        List<User> users = new ArrayList<>();
+        try(Connection connection = DataBase.connectDb(); Statement statement = connection.createStatement();) {
+            String query = "SELECT username, firstName, lastName, password, email, phoneNumber, image FROM info";
+            ResultSet rs = statement.executeQuery(query);
+            while(rs.next()) {
+                String username = rs.getString("username");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String passwordDb = rs.getString("password");
+                String email = rs.getString("email");
+                String phoneNumber = rs.getString("phoneNumber");
+                String image = rs.getString("image");
+                User user = new User(username, email, passwordDb, firstName, lastName, phoneNumber, image);
+                users.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
     public static void loadUsersFromDatabase() {
         if (users.size() != 0) {
             users.clear();

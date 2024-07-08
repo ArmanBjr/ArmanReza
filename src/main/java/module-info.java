@@ -7,8 +7,9 @@ module com.example.demo1 {
     requires com.opencsv;
     requires commons.math3;
     requires java.mail;
+    requires javafx.graphics;
 
-
+    opens com.example.demo1.User to javafx.base;
     opens com.example.demo1 to javafx.fxml;
     opens com.example.demo1.Coins to javafx.base;
     opens com.example.demo1.CurrencyManagement to javafx.base;
@@ -18,5 +19,7 @@ module com.example.demo1 {
     exports com.example.demo1.CurrencyManagement;
     opens com.example.demo1.CoinPages to javafx.fxml;
     exports com.example.demo1.Clients;
+    exports com.example.demo1.Server to javafx.graphics;
     opens com.example.demo1.Clients to javafx.fxml;
+    opens com.example.demo1.Server to javafx.fxml;
 }

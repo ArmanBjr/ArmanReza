@@ -8,19 +8,22 @@ import java.sql.*;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
+    private String username;
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
     }
+
     private Connection connect;
     private PreparedStatement prepare;
     private Statement statement;
     private ResultSet result;
+
     @Override
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
-            String username = in.readLine();
+            username = in.readLine();
             String password = in.readLine();
             String sql = "SELECT * FROM info WHERE username = ? and password = ?";
             connect = DataBase.connectDb();
@@ -28,10 +31,9 @@ public class ClientHandler implements Runnable {
             prepare.setString(1, username);
             prepare.setString(2, password);
             result = prepare.executeQuery();
-            if(result.next()) {
+            if (result.next()) {
                 out.println("Login successful");
-            }
-            else {
+            } else {
                 out.println("login failed");
             }
         } catch (IOException e) {
@@ -44,6 +46,18 @@ public class ClientHandler implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void disconnect() {
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

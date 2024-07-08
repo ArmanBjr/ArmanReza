@@ -13,4 +13,14 @@ public class DataBase {
         }
         return null;
     }
+    public static Connection connectOnline() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/onlineusers","root","");
+            return connect;
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
