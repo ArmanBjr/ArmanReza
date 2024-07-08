@@ -147,7 +147,7 @@ public class AdminController {
             }
         }
     }
-    public double updateWallets(javafx.event.ActionEvent event) {
+    public void updateWallets(javafx.event.ActionEvent event) {
         double totalValue = 0.0;
         try (Connection conn = DataBase.connectDb()) {
             String query = "SELECT username, euro_currency, usd_currency, yen_currency, toman_currency, GBP_currency, property FROM wallet";
@@ -172,16 +172,45 @@ public class AdminController {
                         updateStmt.setString(1, username);
                         updateStmt.executeUpdate();
                     }
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("you have ekhtelased!");
-                    alert.showAndWait();
                 }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("you have ekhtelased!");
+                alert.showAndWait();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return totalValue;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+            String selectSQL = "SELECT AdminProperty FROM id";
+            preparedStatement = connection.prepareStatement(selectSQL);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                double currencValue = resultSet.getDouble("AdminProperty");
+                double newValue = currencValue + totalValue;
+                String updateSQL = "UPDATE id SET AdminProperty = ?";
+                preparedStatement = connection.prepareStatement(updateSQL);
+                preparedStatement.setDouble(1, newValue);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null){
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
-
 }

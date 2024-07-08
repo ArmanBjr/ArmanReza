@@ -136,4 +136,24 @@ public class Values {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return today.format(dateFormatter);
     }
+    public static boolean isMarketOpenGetter() {
+        String query = "SELECT situation FROM id";
+        boolean res = false;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                int help = rs.getInt("situation");
+                if (help == 1) {
+                    res = true;
+                } else {
+                    res = false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 }

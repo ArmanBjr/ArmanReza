@@ -295,7 +295,7 @@ public class Order {
             row.createCell(7).setCellValue(order.getDstCurrency());
             row.createCell(8).setCellValue(order.getAmount());
         }
-        String path = "D:\\university\\AP codes\\testing\\demo1\\exported files\\Orders";
+        String path = "D:\\university\\AP codes\\testing\\demo1\\exported files\\Orders_";
         path += GetUser.username + ".xlsx";
         try (FileOutputStream fileOut = new FileOutputStream(path)) {
             workbook.write(fileOut);
@@ -310,12 +310,9 @@ public class Order {
         }
     }
     public static void addOrder(Order order) {
-        System.out.println("in addOrder function1");
         String query = "INSERT INTO orders (username, DstUser, id, date, time, situation, OriginCurrency, PurposeCurrency, amount, sellOrBuy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        System.out.println("in addOrder function2");
         try (Connection conn = DataBase.connectDb();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            System.out.println("before ste Strings");
             pstmt.setString(1, order.getUsername());
             pstmt.setString(2, order.getDestUsername());
             pstmt.setInt(3, order.getId());
@@ -327,7 +324,6 @@ public class Order {
             pstmt.setDouble(9, order.getAmount());
             pstmt.setString(10, order.buyOrSell);
             pstmt.executeUpdate();
-            System.out.println("added correctly");
         } catch (SQLException e) {
             e.printStackTrace();
         }

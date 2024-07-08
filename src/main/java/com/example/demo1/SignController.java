@@ -113,7 +113,7 @@ public class SignController {
             prepare.setString(4, SignUpFirstNameText.getText());
             prepare.setString(5, SignUpLastNameText.getText());
             prepare.setString(6, SignUpPhoneNumberText.getText());
-            prepare.setString(7, this.imageUrl);
+            //prepare.setString(7, this.imageUrl);
             Alert alert1 = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error message!");
             alert1.setHeaderText(null);
@@ -145,16 +145,21 @@ public class SignController {
                         SignUpProfileImage.getImage().getUrl());
                 user.wallet = new Wallet();
                 Wallet.addUser(SignUpUsernameText.getText());
+                prepare.setString(7, user.getImageUrl());
                 prepare.setInt(8, user.wallet.getID() - 1);
                 prepare.execute();
                 String text = "Congratulations!!!\nyou have created a new account in Reza and Arman's exchange market!\n" +
                         "information of your account:" +
-                        "\nemail: " + SignUpEmailText.getText() +
-                        "\npassword: " + SignUpPasswordText.getText();
+                        "\nemail " + SignUpEmailText.getText() +
+                        "\npassword: " + SignUpPasswordText.getText() +
+                        "\nusername: " + SignUpUsernameText.getText() +
+                        "\nfirst name: " + SignUpFirstNameText.getText() +
+                        "\nlast name: " + SignUpLastNameText.getText();
                 UserDAO.users.add(user);
                 String subject = "Account Created!";
                 alert.setContentText("successfully signed up");
                 alert.showAndWait();
+                String email = SignUpEmailText.getText();
                 SignUpEmailText.setText("");
                 SignUpUsernameText.setText("");
                 SignUpPasswordText.setText("");
@@ -164,7 +169,16 @@ public class SignController {
                 SignUpRepeatPasswordText.setText("");
                 SignUpPage.setVisible(false);
                 SignInPage.setVisible(true);
-                //SendEmail.emailSender(SignUpEmailText.getText(), text, subject);
+                Thread emailSenderThread = new Thread(() -> {
+                    try {
+                        Platform.runLater(() -> {
+                            SendEmail.emailSender(email, text, subject);
+                        });
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                emailSenderThread.start();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,7 +203,7 @@ public class SignController {
                 alert.showAndWait();
             }
             else {
-                if (!isCaptchaVerified && false) {
+                if (!isCaptchaVerified) {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error Message");
                     alert.setHeaderText(null);
@@ -214,7 +228,7 @@ public class SignController {
                             GetUser.username = SignInUsernameText.getText();
                             user.wallet = Wallet.findUser(GetUser.username);
                             GetUser.user = user;
-                            System.out.println(GetUser.user.wallet.CurrentEuro);
+                            GetUser.imageUrl = user.getImageUrl();
                             SignInsigningbutton.getScene().getWindow().hide();
                             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                             Stage stage = new Stage();
@@ -241,10 +255,6 @@ public class SignController {
         }
     }
 
-    @FXML
-    void onSignUpButtonClicked(ActionEvent event) {
-
-    }
 
     public void importImage() {
         FileChooser open = new FileChooser();
@@ -255,8 +265,6 @@ public class SignController {
         if (file != null) {
             Image image = new Image(file.toURI().toString(), 46, 45, false, true);
             SignUpProfileImage.setImage(image);
-            imageUrl = file.toURI().toString();
-            GetUser.imageUrl = imageUrl;
         }
     }
     public void setSignInCaptchaButtonClicked(ActionEvent event) throws InterruptedException {
@@ -270,10 +278,20 @@ public class SignController {
         captchaThread.start();
     }
     public void OnForgetPassClicked(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ForgetPass.fxml"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Thread euroChartThread = new Thread(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("ForgetPass.fxml"));
+                Platform.runLater(() -> {
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.setResizable(false);
+                    stage.show();
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        euroChartThread.start();
     }
 }

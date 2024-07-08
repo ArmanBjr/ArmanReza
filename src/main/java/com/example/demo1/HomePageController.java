@@ -389,7 +389,20 @@ public class HomePageController implements Initializable {
     @FXML
     private MenuButton BuyOrSellBuuton;
 
+    @FXML
+    private Label MarketSituLabel;
+
     public String usernameGet = GetUser.username;
+
+    public void setMarketSituLabel() {
+        if (Values.isMarketOpenGetter()) {
+            MarketSituLabel.setText("Market Is Open_You Can Set An Exchange Order");
+            MarketSituLabel.setTextFill(Color.GREEN);
+        } else {
+            MarketSituLabel.setText("Due to admin's Order, the market is not available");
+            MarketSituLabel.setTextFill(Color.RED);
+        }
+    }
     public static boolean checkConnection(String username) {
         try (Socket socket = new Socket("localhost", 12345);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -474,6 +487,13 @@ public class HomePageController implements Initializable {
     }
 
     public void onExchangeButtonClicked(ActionEvent actionEvent) {
+        if (!Values.isMarketOpenGetter()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error message");
+            alert.setContentText("The Market is closed");
+            alert.showAndWait();
+            return;
+        }
         if (!isOrderCapapble1) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
@@ -720,6 +740,7 @@ public class HomePageController implements Initializable {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 });
             } catch (IOException ex) {
@@ -736,6 +757,7 @@ public class HomePageController implements Initializable {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 });
             } catch (IOException ex) {
@@ -752,6 +774,7 @@ public class HomePageController implements Initializable {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 });
             } catch (IOException ex) {
@@ -768,6 +791,7 @@ public class HomePageController implements Initializable {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 });
             } catch (IOException ex) {
@@ -784,6 +808,7 @@ public class HomePageController implements Initializable {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 });
             } catch (IOException ex) {
@@ -1027,11 +1052,10 @@ public class HomePageController implements Initializable {
     }
     public void displayProfile() {
         try {
-            //String uri = "file:" + GetUser.user.getImageUrl();
-            //String url = "file:" + GetUser.imageUrl;
             if(GetUser.imageUrl != null) {
-                Image image = new Image(GetUser.imageUrl, 200, 150, false, true);
+                Image image = new Image(GetUser.user.getImageUrl(), 150, 200, false, true);
                 ProfileImage.setImage(image);
+                ProfileUserImage.setImage(image);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1054,6 +1078,7 @@ public class HomePageController implements Initializable {
     private boolean isOrderCapapble1 = false, isOrderCapapble2 = false;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setMarketSituLabel();
         ExchangePageAmount.textProperty().addListener((observable, oldValue, newValue) -> {
             if (BuyOrSellBuuton.getText().equals("Buy")) {
                 try {
@@ -1176,7 +1201,13 @@ public class HomePageController implements Initializable {
             public void run() {
                 Platform.runLater(() -> isDisplayOkSaidByReza());
             }
-        }, 0, 60000);
+        }, 0, 5000);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> setMarketSituLabel());
+            }
+        }, 0, 5000);
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -1212,11 +1243,9 @@ public class HomePageController implements Initializable {
         return isOnline;
     }
     public void isDisplayOkSaidByReza() {
-        if (isUserOnline(GetUser.username)) {
-            System.out.println("online");
-        } else {
+        if (!isUserOnline(GetUser.username)) {
             ExchangeAnchor.getScene().getWindow().hide();
-            System.out.println("offline");
+            //System.out.println("online");
         }
     }
     private double getChangePercentage(Connection connection, String column, String date, String time) throws SQLException {

@@ -63,6 +63,39 @@ public class ProfileEditController implements Initializable {
         String password = EditPagePassword.getText().isEmpty() ? null : EditPagePassword.getText();
         String phoneNumber = EditPagePhoneNumber.getText().isEmpty() ? null : EditPagePhoneNumber.getText();
         String imageUrl = EditPageImage.getImage().getUrl();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setContentText("your input does not have the correct format!");
+        if (email != null) {
+            if (!Validator.isValidEmail(email)) {
+                alert.showAndWait();
+                return;
+            }
+        }
+        if (firstName != null) {
+            if (!Validator.isValidName(firstName)) {
+                alert.showAndWait();
+                return;
+            }
+        }
+        if (lastName != null) {
+            if (!Validator.isValidName(lastName)) {
+                alert.showAndWait();
+                return;
+            }
+        }
+        if (password != null) {
+            if (!Validator.isValidPassword(password)) {
+                alert.showAndWait();
+                return;
+            }
+        }
+        if (phoneNumber != null) {
+            if (!Validator.isValidPhoneNumber(phoneNumber)) {
+                alert.showAndWait();
+                return;
+            }
+        }
         System.out.println("before editUser");
         EditUser(GetUser.username, email, firstName, lastName, password, imageUrl, phoneNumber);
         System.out.println("after editUser");
@@ -98,7 +131,12 @@ public class ProfileEditController implements Initializable {
                     sql.append(", ");
                 }
                 sql.append("phoneNumber = ?");
+            } if (imageUrl != null) {
+            if (!firstField) {
+                sql.append(", ");
             }
+            sql.append("Image = ?");
+        }
 
             sql.append(" WHERE username = ?");
             try (Connection conn = DataBase.connectDb();
@@ -120,6 +158,8 @@ public class ProfileEditController implements Initializable {
                 }
                 if (phoneNumber != null) {
                     pstmt.setString(paramIndex++, phoneNumber);
+                } if (imageUrl != null) {
+                    pstmt.setString(paramIndex++, imageUrl);
                 }
                 pstmt.setString(paramIndex, username);
                 int affectedRows = pstmt.executeUpdate();
