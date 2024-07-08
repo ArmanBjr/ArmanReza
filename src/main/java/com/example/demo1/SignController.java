@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import com.example.demo1.User.UserDAO;
+import javafx.stage.StageStyle;
 import org.apache.xmlbeans.impl.xb.xsdschema.Attribute;
 
 import javax.swing.*;
@@ -233,6 +234,7 @@ public class SignController {
                             Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                             Stage stage = new Stage();
                             Scene scene = new Scene(root);
+                            stage.initStyle(StageStyle.TRANSPARENT);
                             stage.setScene(scene);
                             stage.setResizable(false);
                             stage.show();

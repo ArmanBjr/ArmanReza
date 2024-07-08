@@ -1346,4 +1346,15 @@ public class HomePageController implements Initializable {
         });
         EditPage.start();
     }
+    public void HomePageClose() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("are you sure you want to quite?");
+        alert.showAndWait();
+        Server.disconnectUser(GetUser.username);
+        System.exit(0);
+    }
+    public void HomePageMinimize() {
+        Stage stage = (Stage) ExchangeAnchor.getScene().getWindow();
+        stage.setIconified(true);
+    }
 }

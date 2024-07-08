@@ -316,7 +316,22 @@
          <children>
             <Label layoutX="43.0" layoutY="12.0" text="Exchange " />
             <Label fx:id="timeLabel" layoutX="123.0" layoutY="12.0" prefHeight="18.0" prefWidth="61.0" />
-            <Label fx:id="MarketSituLabel" layoutX="747.0" layoutY="12.0" prefHeight="18.0" prefWidth="287.0" text="Market Is Open_You Can Set An Exchange Order" textFill="GREEN" />
+            <Label fx:id="MarketSituLabel" layoutX="381.0" layoutY="12.0" prefHeight="18.0" prefWidth="287.0" text="Market Is Open_You Can Set An Exchange Order" textFill="GREEN" />
+            <Button layoutX="990.0" layoutY="-1.0" minHeight="21.0" minWidth="33.0" mnemonicParsing="false" onAction="#HomePageClose" prefHeight="26.0" prefWidth="58.0" styleClass="close" stylesheets="@beautiHomePage.css">
+               <graphic>
+                  <ImageView fitHeight="14.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/211651_close_round_icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button layoutX="929.0" layoutY="-1.0" minHeight="21.0" minWidth="47.0" mnemonicParsing="false" onAction="#HomePageMinimize" prefHeight="26.0" prefWidth="58.0" styleClass="close" stylesheets="@beautiHomePage.css" />
+            <ImageView fitHeight="14.0" fitWidth="14.0" layoutX="949.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/8664917_window_minimize_icon.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="HomePageAnchor" layoutX="186.0" layoutY="40.0" prefHeight="700.0" prefWidth="869.0">

@@ -18,8 +18,6 @@ module com.example.demo1 {
     exports com.example.demo1.CoinPages;
     exports com.example.demo1.CurrencyManagement;
     opens com.example.demo1.CoinPages to javafx.fxml;
-    exports com.example.demo1.Clients;
     exports com.example.demo1.Server to javafx.graphics;
-    opens com.example.demo1.Clients to javafx.fxml;
     opens com.example.demo1.Server to javafx.fxml;
 }

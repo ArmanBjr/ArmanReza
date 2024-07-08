@@ -61,3 +61,16 @@
     -fx-border-radius: 10px;
     -fx-border-color: #449e5e;
 }
+.anchor3-pane {
+    -fx-background-color: #ffff;
+}
+.anchor3-pane:hover {
+    -fx-background-color: linear-gradient(to top left, #ffffff, #c4ffc6);
+}
+.close {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+.close:hover {
+    -fx-background-color: linear-gradient(to top left, #4fff90, #70f026);
+}
