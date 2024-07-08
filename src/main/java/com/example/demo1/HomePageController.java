@@ -54,6 +54,7 @@ import java.util.*;
 
 
 public class HomePageController implements Initializable {
+
     @FXML
     private Label ExchangePageLabel;
 
@@ -455,6 +456,29 @@ public class HomePageController implements Initializable {
         }
     }
 
+    public void onExchangeButtonClicked(ActionEvent actionEvent) {
+        if (!isOrderCapapble1) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Error message");
+            alert.setContentText("Invalid Input!");
+            alert.showAndWait();
+        } else {
+            double amount = Double.parseDouble(ExchangePageAmount.getText());
+            double price = Double.parseDouble(ExchangePagePrice.getText());
+            amount = amount / price;
+            Order order = new Order(GetUser.username, BuyOrSellBuuton.getText(),
+                    null, Values.getCurrentDate(), Values.getCurrentTime(), "pending",
+                    ExchangePageCurrency.getText(), ExchangePageCurrency.getText(), amount);
+            order.setDestUsername("admin");
+            Order.addOrder(order);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("info");
+            alert.setContentText("Order Set");
+            alert.showAndWait();
+        }
+    }
     public void onMenuButtonExchangePageBuyOrSellClicked(ActionEvent actionEvent) {
         if (actionEvent.getSource() == ExchangeSellChoose) {
             BuyOrSellBuuton.setText("Sell");
@@ -793,7 +817,6 @@ public class HomePageController implements Initializable {
             double amount = Double.parseDouble(AmountOfPurposeCurrency.getText());
             Order order = new Order(GetUser.username, TransferPageUsername.getText(), Values.getCurrentDate(), Values.getCurrentTime(),
                     "accepted", "property", TransferPageMenuButton.getText(), amount);
-            System.out.println(order.getId());
             Order.addOrder(order);
             double euro = 0, toman = 0, usd = 0, GBP = 0, yen = 0;
             switch (TransferPageMenuButton.getText()) {

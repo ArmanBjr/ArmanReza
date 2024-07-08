@@ -145,7 +145,7 @@ public class SignController {
                         SignUpProfileImage.getImage().getUrl());
                 user.wallet = new Wallet();
                 Wallet.addUser(SignUpUsernameText.getText());
-                prepare.setInt(8, user.wallet.getID());
+                prepare.setInt(8, user.wallet.getID() - 1);
                 prepare.execute();
                 String text = "Congratulations!!!\nyou have created a new account in Reza and Arman's exchange market!\n" +
                         "information of your account:" +
@@ -220,6 +220,7 @@ public class SignController {
                             Stage stage = new Stage();
                             Scene scene = new Scene(root);
                             stage.setScene(scene);
+                            stage.setResizable(false);
                             stage.show();
                         }
                     } catch (IOException e) {

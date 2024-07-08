@@ -30,6 +30,7 @@ public class Order {
     private String DstCurrency;
     private double amount;
     private int OrderId;
+    private String buyOrSell = "notExchange";
     public Order(String user, String destUsername, int id, String date, String time, String situation, String OrgCurrency,
                  String DstCurrency, double amount) {
         setUsername(user);
@@ -41,9 +42,26 @@ public class Order {
         setSituation(situation);
         setDstCurrency(DstCurrency);
         setOrgCurrency(OrgCurrency);
+        this.buyOrSell = "NotExchange";
     }
     public Order(String user, String destUsername, String date, String time, String situation, String OrgCurrency,
                  String DstCurrency, double amount) {
+        setUsername(user);
+        setDestUsername(destUsername);
+        setAmount(amount);
+        setDate(date);
+        setTime(time);
+        setSituation(situation);
+        setDstCurrency(DstCurrency);
+        setOrgCurrency(OrgCurrency);
+        this.OrderId = Values.getOrderID();
+        System.out.println(this.OrderId);
+        Values.incrementOrderID();
+        this.buyOrSell = "NotExchange";
+    }
+    public Order(String user, String buyOrSell, String destUsername, String date, String time, String situation, String OrgCurrency,
+                 String DstCurrency, double amount) {
+        this.buyOrSell = buyOrSell;
         setUsername(user);
         setDestUsername(destUsername);
         setAmount(amount);
@@ -292,11 +310,12 @@ public class Order {
         }
     }
     public static void addOrder(Order order) {
-        String query = "INSERT INTO orders (username, DstUser, id, date, time, situation, OriginCurrency, PurposeCurrency, amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+        System.out.println("in addOrder function1");
+        String query = "INSERT INTO orders (username, DstUser, id, date, time, situation, OriginCurrency, PurposeCurrency, amount, sellOrBuy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        System.out.println("in addOrder function2");
         try (Connection conn = DataBase.connectDb();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-
+            System.out.println("before ste Strings");
             pstmt.setString(1, order.getUsername());
             pstmt.setString(2, order.getDestUsername());
             pstmt.setInt(3, order.getId());
@@ -306,24 +325,29 @@ public class Order {
             pstmt.setString(7, order.getOrgCurrency());
             pstmt.setString(8, order.getDstCurrency());
             pstmt.setDouble(9, order.getAmount());
-
+            pstmt.setString(10, order.buyOrSell);
             pstmt.executeUpdate();
+            System.out.println("added correctly");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        processOrder(order);
     }
     public static boolean processOrder(Order inputOrder) {
         if (!inputOrder.getOrgCurrency().equals(inputOrder.getDstCurrency())) {
             return false;
         }
-        String query = "SELECT * FROM orders WHERE situation = 'pending' AND OrgCurrency = ? AND DstCurrency = ? AND amount >= ?";
 
+        String query = "SELECT * FROM orders WHERE situation = 'pending' AND OriginCurrency = ? AND PurposeCurrency = ? AND sellOrBuy = ? AND amount >= ?";
         try (Connection conn = DataBase.connectDb();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-
+            String BOS;
+            if (inputOrder.buyOrSell.equals("Sell")) BOS = "Buy";
+            else BOS = "Sell";
             pstmt.setString(1, inputOrder.getOrgCurrency());
             pstmt.setString(2, inputOrder.getDstCurrency());
-            pstmt.setDouble(3, inputOrder.getAmount());
+            pstmt.setString(3, BOS);
+            pstmt.setDouble(4, inputOrder.getAmount());
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -331,11 +355,26 @@ public class Order {
                 String orderUsername = rs.getString("username");
                 if (!orderUsername.equals(inputOrder.getUsername())) {
                     int orderId = rs.getInt("id");
-                    String updateQuery = "UPDATE orders SET situation = 'accepted', DestUsername = ? WHERE id = ?";
+                    double matchAmount = rs.getDouble("amount");
+                    String matchedOrderCurrency = rs.getString("OriginCurrency");
+                    String updateQuery = "UPDATE orders SET situation = 'accepted', DstUser = ? WHERE id = ?";
                     try (PreparedStatement updatePstmt = conn.prepareStatement(updateQuery)) {
                         updatePstmt.setString(1, GetUser.username);
                         updatePstmt.setInt(2, orderId);
                         updatePstmt.executeUpdate();
+                    }
+                    String updateQuery2 = "UPDATE orders SET situation = 'accepted', DstUser = ? WHERE id = ?";
+                    try (PreparedStatement updatePstmt = conn.prepareStatement(updateQuery2)) {
+                        updatePstmt.setString(1, GetUser.username);
+                        updatePstmt.setInt(2, inputOrder.OrderId);
+                        updatePstmt.executeUpdate();
+                    }
+                    if (inputOrder.buyOrSell.equals("Sell")) {
+                        Wallet.updateWallet(orderUsername, matchedOrderCurrency, -matchAmount * Values.Value(matchedOrderCurrency), matchAmount);
+                        Wallet.updateWallet(GetUser.username, matchedOrderCurrency, matchAmount * Values.Value(matchedOrderCurrency), -matchAmount);
+                    } else if (inputOrder.buyOrSell.equals("Buy")) {
+                        Wallet.updateWallet(inputOrder.getUsername(), matchedOrderCurrency, matchAmount * Values.Value(matchedOrderCurrency), -matchAmount);
+                        Wallet.updateWallet(GetUser.username, matchedOrderCurrency, -matchAmount * Values.Value(matchedOrderCurrency), matchAmount);
                     }
                     return true;
                 }
@@ -347,5 +386,4 @@ public class Order {
 
         return false;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.demo1.CurrencyManagement;
 
 import com.example.demo1.DataBase;
+import com.example.demo1.User.GetUser;
 import com.example.demo1.User.User;
 import com.example.demo1.User.UserDAO;
 import com.example.demo1.Utilities.Values;
@@ -41,6 +42,18 @@ public class Wallet {
         this.CurrentYen = yen;
     }
     public double setCurrentProperty() {
+        double Property = 0;
+        try (Connection connection = DataBase.connectDb()) {
+            String query = "SELECT property FROM wallet WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, GetUser.username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Property = resultSet.getDouble("property");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         double result = 0;
         result += CurrentToman / CurrencyGetter("toman");
         result += CurrentYen / CurrencyGetter("yen");
@@ -48,6 +61,7 @@ public class Wallet {
         result += CurrentEuro / CurrencyGetter("euro");
         result += CurentGbp / CurrencyGetter("GBp");
         this.currentProperty = result;
+        this.currentProperty += Property;
         return currentProperty;
     }
     public double CurrencyGetter(String name) {
@@ -71,7 +85,7 @@ public class Wallet {
     }
     public static void addUser(String username) {
         String countQuery = "SELECT COUNT(*) FROM wallet";
-        String insertQuery = "INSERT INTO wallet (username, id, euro_currency, usd_currency, GBP_currency, toman_currency, yen_currency) VALUES (?, ?, 0, 0, 0, 0, 0)";
+        String insertQuery = "INSERT INTO wallet (username, id, euro_currency, usd_currency, GBP_currency, toman_currency, yen_currency, property) VALUES (?, ?, 0, 0, 0, 0, 0, 0)";
 
         try (Connection conn = DataBase.connectDb();
              Statement stmt = conn.createStatement();
@@ -242,5 +256,34 @@ public class Wallet {
         }
 
         return false;
+    }
+    public static void updateWallet(String username, String currency, double currencyAmountChange, double propertyChange) {
+        String currencyColumn = getCurrencyColumn(currency);
+        String updateQuery = "UPDATE wallet SET " + currencyColumn + " = " + currencyColumn + " + ?, property = property + ? WHERE username = ?";
+        try (Connection conn = DataBase.connectDb();
+             PreparedStatement pstmt = conn.prepareStatement(updateQuery)) {
+            pstmt.setDouble(1, currencyAmountChange);
+            pstmt.setDouble(2, propertyChange);
+            pstmt.setString(3, username);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static String getCurrencyColumn(String currency) {
+        switch (currency.toLowerCase()) {
+            case "euro":
+                return "euro_currency";
+            case "usd":
+                return "usd_currency";
+            case "yen":
+                return "yen_currency";
+            case "toman":
+                return "toman_currency";
+            case "gbp":
+                return "gbp_currency";
+            default:
+                throw new IllegalArgumentException("Invalid currency: " + currency);
+        }
     }
 }

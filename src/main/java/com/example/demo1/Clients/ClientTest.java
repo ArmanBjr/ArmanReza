@@ -1,5 +1,6 @@
-package com.example.demo1;
+package com.example.demo1.Clients;
 
+import com.example.demo1.Clients.SignApplication;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

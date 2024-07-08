@@ -69,6 +69,7 @@ public class UsdChartController {
     }
     @FXML
     public void initialize() {
+        //series.setName("Change");
         series = new XYChart.Series<>();
         lineChart.getData().add(series);
 

@@ -1,4 +1,4 @@
-package com.example.demo1;
+package com.example.demo1.Clients;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +15,7 @@ public class SignApplication extends Application {
         scene.getStylesheets().add(String.valueOf(getClass().getResource("/com/example/demo1/Beauty.css")));
         stage.setTitle("Exchange");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
     public static void main(String[] args) {
