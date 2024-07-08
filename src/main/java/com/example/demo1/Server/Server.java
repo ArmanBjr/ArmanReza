@@ -26,6 +26,7 @@ public class Server extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/com/example/demo1/AdminPage.fxml"));
         primaryStage.setTitle("Home Page");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
     public static void main(String[] args){

@@ -71,7 +71,7 @@ public class CaptchaApp extends JFrame {
     }
 
     private String generateRandomString(int length) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         StringBuilder sb = new StringBuilder();
         Random rnd = new Random();
         while (sb.length() < length) {

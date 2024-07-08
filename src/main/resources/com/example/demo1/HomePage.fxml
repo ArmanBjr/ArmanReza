@@ -65,10 +65,10 @@
                      </image>
                   </ImageView>
                   <AnchorPane layoutX="46.0" layoutY="238.0" prefHeight="93.0" prefWidth="219.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
-                  <AnchorPane layoutX="329.0" layoutY="238.0" prefHeight="93.0" prefWidth="177.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
+                  <AnchorPane layoutX="329.0" layoutY="238.0" prefHeight="93.0" prefWidth="256.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
                   <AnchorPane layoutX="598.0" layoutY="238.0" prefHeight="93.0" prefWidth="177.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
                   <AnchorPane layoutX="46.0" layoutY="350.0" prefHeight="93.0" prefWidth="219.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
-                  <AnchorPane layoutX="329.0" layoutY="350.0" prefHeight="93.0" prefWidth="177.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
+                  <AnchorPane layoutX="329.0" layoutY="350.0" prefHeight="93.0" prefWidth="256.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
                   <AnchorPane layoutX="601.0" layoutY="350.0" prefHeight="93.0" prefWidth="177.0" styleClass="anchor2-pane" stylesheets="@beautiHomePage.css" />
                </children>
             </AnchorPane>
@@ -132,7 +132,7 @@
             </AnchorPane>
             <AnchorPane fx:id="TransferPage" prefHeight="700.0" prefWidth="861.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <MenuButton fx:id="TransferPageMenuButton" disable="true" layoutX="663.0" layoutY="351.0" mnemonicParsing="false" popupSide="TOP" text="MenuButton">
+                  <MenuButton fx:id="TransferPageMenuButton" disable="true" layoutX="663.0" layoutY="351.0" mnemonicParsing="false" popupSide="TOP" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="MenuButton">
                      <items>
                         <MenuItem fx:id="TransferEuro" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="Euro" />
                         <MenuItem fx:id="TransferUsd" mnemonicParsing="false" onAction="#onMenuButtonTransferClicked" text="Usd" />
@@ -202,7 +202,7 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <MenuButton fx:id="SwapPageMenuButton" layoutX="102.0" layoutY="42.0" mnemonicParsing="false" popupSide="TOP" text="MenuButton">
+                        <MenuButton fx:id="SwapPageMenuButton" layoutX="102.0" layoutY="42.0" mnemonicParsing="false" popupSide="TOP" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="MenuButton">
                            <items>
                               <MenuItem fx:id="SwapPageEuro" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="Euro" />
                               <MenuItem fx:id="SwapPageUsd" mnemonicParsing="false" onAction="#onMenuButtonSwapClicked" text="Usd" />
@@ -220,7 +220,7 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <MenuButton fx:id="SwapPageMenuButton1" layoutX="99.0" layoutY="39.0" mnemonicParsing="false" text="MenuButton">
+                        <MenuButton fx:id="SwapPageMenuButton1" layoutX="99.0" layoutY="39.0" mnemonicParsing="false" styleClass="edit-button" stylesheets="@beautiHomePage.css" text="MenuButton">
                            <items>
                               <MenuItem fx:id="SwapPageEuro1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="Euro" />
                               <MenuItem fx:id="SwapPageUsd1" mnemonicParsing="false" onAction="#onMenuBuutonSwapClicked1" text="Usd" />
