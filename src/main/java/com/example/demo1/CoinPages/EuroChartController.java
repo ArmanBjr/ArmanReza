@@ -95,7 +95,6 @@ public class EuroChartController {
     }
     private void updateChart() {
         if (situ == 2) {
-
             xAxis.setLabel("Hour");
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

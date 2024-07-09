@@ -173,6 +173,16 @@ public class AdminController {
                         updateStmt.executeUpdate();
                     }
                 }
+
+                String updateQuery = "UPDATE id SET AdminProperty = ?";
+
+                try (Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/id_getter", "root", "");
+                     PreparedStatement pstmt = connect.prepareStatement(updateQuery)) {
+                    pstmt.setDouble(1, totalValue);
+                    pstmt.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("you have ekhtelased!");
                 alert.showAndWait();

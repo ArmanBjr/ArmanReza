@@ -149,13 +149,6 @@ public class SignController {
                 prepare.setString(7, user.getImageUrl());
                 prepare.setInt(8, user.wallet.getID() - 1);
                 prepare.execute();
-                String text = "Congratulations!!!\nyou have created a new account in Reza and Arman's exchange market!\n" +
-                        "information of your account:" +
-                        "\nemail " + SignUpEmailText.getText() +
-                        "\npassword: " + SignUpPasswordText.getText() +
-                        "\nusername: " + SignUpUsernameText.getText() +
-                        "\nfirst name: " + SignUpFirstNameText.getText() +
-                        "\nlast name: " + SignUpLastNameText.getText();
                 UserDAO.users.add(user);
                 String subject = "Account Created!";
                 alert.setContentText("successfully signed up");
@@ -170,16 +163,7 @@ public class SignController {
                 SignUpRepeatPasswordText.setText("");
                 SignUpPage.setVisible(false);
                 SignInPage.setVisible(true);
-                Thread emailSenderThread = new Thread(() -> {
-                    try {
-                        Platform.runLater(() -> {
-                            SendEmail.emailSender(email, text, subject);
-                        });
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                emailSenderThread.start();
+
             }
         } catch (Exception e) {
             e.printStackTrace();

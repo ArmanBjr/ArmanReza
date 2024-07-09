@@ -561,6 +561,10 @@ public class HomePageController implements Initializable {
             if (!originCurrency.equals("GBP")) originCurrency = originCurrency.toLowerCase();
             double originCurrencyValue = Values.Value(originCurrency);
             String targetCurrency = SwapPageMenuButton1.getText();
+            double orgCurrency = Values.Value(originCurrency);
+            String newTargetCurrency = null;
+            if (!targetCurrency.equals("GBP"))  newTargetCurrency = targetCurrency.toLowerCase();
+            double tarCurrency = Values.Value(targetCurrency);
             switch (originCurrency) {
                 case "euro":
                     originCurrency = "euro_currency";
@@ -595,12 +599,14 @@ public class HomePageController implements Initializable {
                     targetCurrency = "GBP_currency";
                     break;
             }
-            System.out.println(targetCurrency);
+            if (!targetCurrency.equals("GBP")) {
+                targetCurrency.toLowerCase();
+            }
             double orgAmount;
             double purAmount;
             try {
-                orgAmount = Double.parseDouble(SwapPageOriginAmount.getText());
-                purAmount = Double.parseDouble(SwapPagePurAmount.getText());
+                orgAmount = Double.parseDouble(SwapPageOriginAmount.getText()) / orgCurrency;
+                purAmount = Double.parseDouble(SwapPagePurAmount.getText()) / tarCurrency;
             } catch (NumberFormatException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("error");
@@ -853,6 +859,7 @@ public class HomePageController implements Initializable {
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("wrong format of input!");
+            alert.showAndWait();
         }
         else {
             int id = Integer.parseInt(TransferWalletId.getText());
